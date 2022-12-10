@@ -11,12 +11,15 @@ import Profile from './Pages/Shared/Profile/Profile';
 import UpdateResult from './Pages/Shared/UpdateResult/UpdateResult';
 import Enrollment from './Pages/StudentPanel/Enrollment/Enrollment';
 import Result from './Pages/StudentPanel/Result/Result';
-import OnlineExam from './Pages/TeachersPanel/OnlineExam/OnlineExam';
+import OnlineExam from './Pages/Shared/OnlineExam/OnlineExam';
+import useIsDarkTheme from './hooks/useIsDarkTheme';
 
 function App() {
+  const [isDarkTheme] = useIsDarkTheme();
   const [role, setRole] = useState('student');
+
   return (
-    <div>
+    <div data-theme={isDarkTheme ? 'dark' : 'light'}>
       <Header role={role} />
       <Routes>
         <Route path='/' element={<Home />} />
@@ -31,8 +34,8 @@ function App() {
         <Route path='/result' element={<Result />} />
         <Route path='/enrollment' element={<Enrollment />} />
       </Routes>
-      <div className='flex gap-5 justify-center'>
-        <button className='btn' onClick={() => setRole('student')}>
+      <div className='flex lg:flex-row flex-col gap-5 justify-center pt-32'>
+        <button className='btn btn-success' onClick={() => setRole('student')}>
           Student View
         </button>
         <button className='btn' onClick={() => setRole('teacher')}>
