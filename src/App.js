@@ -12,14 +12,12 @@ import UpdateResult from './Pages/Shared/UpdateResult/UpdateResult';
 import Enrollment from './Pages/StudentPanel/Enrollment/Enrollment';
 import Result from './Pages/StudentPanel/Result/Result';
 import OnlineExam from './Pages/Shared/OnlineExam/OnlineExam';
-import useIsDarkTheme from './hooks/useIsDarkTheme';
 
 function App() {
-  const [isDarkTheme] = useIsDarkTheme();
   const [role, setRole] = useState('student');
 
   return (
-    <div data-theme={isDarkTheme ? 'dark' : 'light'}>
+    <div>
       <Header role={role} />
       <Routes>
         <Route path='/' element={<Home />} />

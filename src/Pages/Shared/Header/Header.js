@@ -1,8 +1,16 @@
-import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CustomLink from './CustomLink';
+import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
+import { themeChange } from 'theme-change';
 
 const Header = ({ role }) => {
+  const [toggleTheme, setToggleTheme] = useState(false);
+  const theme = localStorage.getItem('theme');
+  useEffect(() => {
+    themeChange(false);
+  }, []);
   const user = 'v';
   const NavItems = () => {
     return (
@@ -58,7 +66,7 @@ const Header = ({ role }) => {
   };
 
   return (
-    <div className='navbar  bg-primary text-white'>
+    <div className='navbar dark:bg-[#4338ca] bg-[#cbd5e1] dark:text-white'>
       <div className='navbar-start'>
         <div className='dropdown'>
           <label tabIndex={0} className='btn btn-ghost lg:hidden'>
@@ -103,6 +111,23 @@ const Header = ({ role }) => {
               Md Abdullah Hosen<sup>{role}</sup>
             </CustomLink>
             <button className='btn btn-ghost'>Log Out</button>
+            <button
+              onClick={() => {
+                setToggleTheme(!toggleTheme);
+              }}
+              data-set-theme={
+                toggleTheme
+                  ? theme === 'dark'
+                    ? 'light'
+                    : 'dark'
+                  : theme === 'light'
+                  ? 'dark'
+                  : 'light'
+              }
+              className='btn btn-ghost'
+            >
+              <FontAwesomeIcon icon={faCircleHalfStroke} />
+            </button>
           </>
         ) : (
           <>
