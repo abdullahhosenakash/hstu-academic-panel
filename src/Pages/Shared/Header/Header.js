@@ -1,16 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import CustomLink from './CustomLink';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
-import { themeChange } from 'theme-change';
 
 const Header = ({ role }) => {
-  const [toggleTheme, setToggleTheme] = useState(false);
-  const theme = localStorage.getItem('theme');
-  useEffect(() => {
-    themeChange(false);
-  }, []);
   const user = 'v';
   const NavItems = () => {
     return (
@@ -90,6 +84,25 @@ const Header = ({ role }) => {
             className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52'
           >
             <NavItems />
+            {user ? (
+              <>
+                <CustomLink
+                  to='/profile'
+                  className='font-semibold uppercase text-sm'
+                >
+                  Md Abdullah Hosen<sup>{role}</sup>
+                </CustomLink>
+                <button className='btn btn-ghost'>Log Out</button>
+                <button className='btn btn-ghost'>
+                  <FontAwesomeIcon icon={faCircleHalfStroke} />
+                </button>
+              </>
+            ) : (
+              <>
+                <CustomLink to='/login'>Login</CustomLink>
+                <CustomLink to='/signUp'>Sign Up</CustomLink>
+              </>
+            )}
           </ul>
         </div>
         <Link to='/' className='btn btn-ghost normal-case text-xl'>
@@ -111,21 +124,7 @@ const Header = ({ role }) => {
               Md Abdullah Hosen<sup>{role}</sup>
             </CustomLink>
             <button className='btn btn-ghost'>Log Out</button>
-            <button
-              onClick={() => {
-                setToggleTheme(!toggleTheme);
-              }}
-              data-set-theme={
-                toggleTheme
-                  ? theme === 'dark'
-                    ? 'light'
-                    : 'dark'
-                  : theme === 'light'
-                  ? 'dark'
-                  : 'light'
-              }
-              className='btn btn-ghost'
-            >
+            <button className='btn btn-ghost'>
               <FontAwesomeIcon icon={faCircleHalfStroke} />
             </button>
           </>

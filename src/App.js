@@ -33,18 +33,33 @@ function App() {
         <Route path='/enrollment' element={<Enrollment />} />
       </Routes>
       <div className='flex lg:flex-row flex-col gap-5 justify-center pt-32'>
-        <button className='btn btn-success' onClick={() => setRole('student')}>
+        <button
+          className={`btn btn-sm rounded-full btn-primary  ${
+            role === 'student' && 'btn-disabled'
+          }`}
+          onClick={() => setRole('student')}
+        >
           Student View
         </button>
-        <button className='btn' onClick={() => setRole('teacher')}>
+        <button
+          className={`btn btn-sm rounded-full btn-primary ${
+            role === 'teacher' && 'btn-disabled'
+          }`}
+          onClick={() => setRole('teacher')}
+        >
           Teacher View
         </button>
-        <button className='btn' onClick={() => setRole('admin')}>
+        <button
+          className={`btn btn-sm rounded-full btn-primary ${
+            role === 'admin' && 'btn-disabled'
+          }`}
+          onClick={() => setRole('admin')}
+        >
           Admin View
         </button>
       </div>
-      <div className='text-red-400  text-center text-4xl'>
-        This buttons are for development purpose and not for production
+      <div className='text-red-700  text-center text-4xl'>
+        This buttons are for development purpose and not for final production
       </div>
     </div>
   );
