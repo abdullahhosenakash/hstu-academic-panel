@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import StudentOnlineExam from './StudentOnlineExam';
-import TeacherOnlineExam from './TeacherOnlineExam';
+import StudentOnlineExam from '../../StudentPanel/StudentOnlineExam/StudentOnlineExam';
+import TeacherOnlineExam from '../../TeacherPanel/TeacherOnlineExam/TeacherOnlineExam';
 
 const OnlineExam = () => {
   const [toggleExamMode, setToggleExamMode] = useState('old');
@@ -10,7 +10,7 @@ const OnlineExam = () => {
       <h2 className='text-center py-1 text-3xl'>Online Exam</h2>
       <div className='flex  gap-3 justify-center'>
         <button
-          className={`btn rounded-full btn-primary w-42 lg:uppercase normal-case  ${
+          className={`btn btn-sm rounded-full btn-primary w-42 lg:uppercase normal-case  ${
             toggleExamMode === 'old' && 'btn-disabled'
           }`}
           onClick={() => setToggleExamMode('old')}
@@ -18,7 +18,7 @@ const OnlineExam = () => {
           View Existing Exams
         </button>
         <button
-          className={`btn rounded-full btn-primary w-42 lg:uppercase normal-case ${
+          className={`btn btn-sm rounded-full btn-primary w-42 lg:uppercase normal-case ${
             toggleExamMode === 'new' && 'btn-disabled'
           }`}
           onClick={() => setToggleExamMode('new')}

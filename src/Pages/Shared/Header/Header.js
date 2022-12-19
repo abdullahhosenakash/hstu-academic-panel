@@ -106,7 +106,7 @@ const Header = ({ role }) => {
           </ul>
         </div>
         <Link to='/' className='btn btn-ghost normal-case text-xl'>
-          HSTU Academic Panel
+          HSTU Online Services
         </Link>
       </div>
       <div className='navbar-start hidden lg:flex'>
@@ -121,7 +121,7 @@ const Header = ({ role }) => {
               to='/profile'
               className='font-semibold uppercase text-sm'
             >
-              Md Abdullah Hosen<sup>{role}</sup>
+              User<sup>{role}</sup>
             </CustomLink>
             <button className='btn btn-ghost'>Log Out</button>
             <button className='btn btn-ghost'>
