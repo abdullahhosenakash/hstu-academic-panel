@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DeleteModal from '../../Shared/Utilities/DeleteModal';
 
 const AvailableQuestions = (props) => {
   const {
@@ -70,15 +71,16 @@ const AvailableQuestions = (props) => {
               >
                 Edit
               </button>
-              <button
+              <label
+                htmlFor='my-modal-6'
                 className='btn rounded-full btn-primary w-20'
-                onClick={(e) => {
-                  e.preventDefault();
-                  deleteQuestion(questionId);
-                }}
               >
                 Delete
-              </button>
+              </label>
+              <DeleteModal
+                deleteQuestion={deleteQuestion}
+                questionId={questionId}
+              />
             </div>
           </td>
         </>

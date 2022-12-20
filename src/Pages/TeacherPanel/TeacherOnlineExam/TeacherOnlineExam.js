@@ -9,6 +9,8 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
   const [editQuestion, setEditQuestion] = useState(false);
   const [questionToEdit, setQuestionToEdit] = useState('');
   const [previewQuestion, setPreviewQuestion] = useState(false);
+  const [level, setLevel] = useState('');
+  const [semester, setSemester] = useState('');
 
   const questionSubmit = (e) => {
     e.preventDefault();
@@ -50,11 +52,58 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
     setQuestions(restQuestions);
   };
 
+  const launchQuestions = (e) => {
+    e.preventDefault();
+    const duration = e.target.duration.value;
+    const examQuestions = {
+      courseTeacher: 'Md Abdullah Hosen',
+      courseCode: 'ECE 443',
+      courseTitle: 'Database Design',
+      duration: duration + ' minutes',
+      // deadline:''
+      questions
+    };
+    console.log(examQuestions);
+  };
+
   return (
     <div>
       {toggleExamMode === 'new' && (
         <>
-          <div className='flex justify-center gap-2 py-2'>
+          <div className='flex justify-center py-2'>
+            <div className='flex gap-8'>
+              <div className='flex gap-1'>
+                <label className='label'>
+                  <span className='label-text text-lg'>Level</span>
+                </label>
+                <select
+                  className='select select-primary w-3/4 text-base font-normal'
+                  onChange={(e) => setLevel(e.target.value)}
+                >
+                  <option value=''>Select Level</option>
+                  <option value='1'>1</option>
+                  <option value='2'>2</option>
+                  <option value='3'>3</option>
+                  <option value='4'>4</option>
+                </select>
+              </div>
+              <div className='flex gap-1'>
+                <label className='label'>
+                  <span className='label-text text-lg'>Semester</span>
+                </label>
+                <select
+                  className='select select-primary w-3/4 text-base font-normal'
+                  disabled={!level}
+                  onChange={(e) => setSemester(e.target.value)}
+                >
+                  <option value=''>Select Semester</option>
+                  <option value='I'>I</option>
+                  <option value='II'>II</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className='flex justify-center pb-2'>
             <button
               className={`btn btn-sm rounded-full btn-primary w-16 ${
                 examType === 'cq' && 'btn-disabled'
@@ -143,15 +192,40 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
               </form>
             )}
             {questions.length && (
-              <p className='text-xl text-center pt-2'>
-                Done making questions?
+              <p className='text-xl text-center py-2'>
+                {previewQuestion ? 'Edit Questions?' : 'Done making questions?'}
                 <span
                   className='text-primary pl-2 cursor-pointer'
-                  onClick={() => setPreviewQuestion(true)}
+                  onClick={() => setPreviewQuestion(!previewQuestion)}
                 >
-                  see preview
+                  {previewQuestion ? 'click here' : 'see preview'}
                 </span>
               </p>
+            )}
+
+            {previewQuestion && (
+              <>
+                <form onSubmit={(e) => launchQuestions(e)}>
+                  <div className='flex justify-center gap-2 py-2'>
+                    <label className='label'>
+                      <span className='font-bold'>
+                        Time Duration (in minutes):
+                      </span>
+                    </label>
+                    <input
+                      type='number'
+                      name='duration'
+                      className='input input-primary'
+                      required
+                      min={0}
+                    />
+                    <input type='date' name='' className='input' id='' />
+                  </div>
+                  <button className='btn btn-primary rounded-full flex mx-auto w-1/5'>
+                    Launch Questions
+                  </button>
+                </form>
+              </>
             )}
           </div>
         </>

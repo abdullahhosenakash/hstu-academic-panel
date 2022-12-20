@@ -6,22 +6,27 @@ const CQ = ({ questions, preview = false }) => {
     console.log('a');
   };
   return (
-    <div className='hero min-h-screen'>
+    <div className='hero mt-2'>
       <div className='hero-content flex-col lg:flex-row-reverse'>
-        <div className='card flex-shrink-0 w-[40rem] shadow-[0_10px_60px_15px_rgba(0,0,0,0.3)] bg-base-100'>
+        <div
+          className='card flex-shrink-0 w-[40rem] shadow-[0_10px_60px_-10px_rgba(0,0,0,0.3)] bg-base-100'
+          data-theme='dark'
+        >
           <form onSubmit={(e) => submitAnswers(e)}>
             <div className='card-body'>
               {/* <form onSubmit={() => console.log('ss')}> */}
               {questions.map((q, index) => (
                 <div className='form-control' key={index}>
                   <label className='label'>
-                    <span className='label-text text-lg'>{q.question}</span>
+                    <span className='label-text text-lg text-white'>
+                      {q.question}
+                    </span>
                   </label>
                   <textarea
                     name={`answerToQuestion${q.questionId}`}
                     className='textarea textarea-bordered bg-white text-lg text-black w-full'
                     placeholder='Type your answer here'
-                    disabled={preview}
+                    // disabled={preview}
                     //   defaultValue={question}
                     //   onFocus={() => setErrorMessage('')}
                     //   onChange={(e) => setUpdatedQuestionText(e.target.value)}
@@ -30,8 +35,12 @@ const CQ = ({ questions, preview = false }) => {
               ))}
 
               <div className='form-control mt-6'>
-                <button className='btn btn-primary' type='submit'>
-                  Login
+                <button
+                  className='btn btn-primary w-1/2 mx-auto'
+                  type='submit'
+                  disabled={preview}
+                >
+                  Submit Answer
                 </button>
               </div>
             </div>

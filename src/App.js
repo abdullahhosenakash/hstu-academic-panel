@@ -12,6 +12,7 @@ import UpdateResult from './Pages/Shared/UpdateResult/UpdateResult';
 import Enrollment from './Pages/StudentPanel/Enrollment/Enrollment';
 import Result from './Pages/StudentPanel/Result/Result';
 import OnlineExam from './Pages/Shared/OnlineExam/OnlineExam';
+import DeleteModal from './Pages/Shared/Utilities/DeleteModal';
 
 function App() {
   const [role, setRole] = useState('student');
