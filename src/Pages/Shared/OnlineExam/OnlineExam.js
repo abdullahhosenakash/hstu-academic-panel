@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import useRole from '../../../hooks/useRole';
 import StudentOnlineExam from '../../StudentPanel/StudentOnlineExam/StudentOnlineExam';
 import TeacherOnlineExam from '../../TeacherPanel/TeacherOnlineExam/TeacherOnlineExam';
 
 const OnlineExam = () => {
   const [toggleExamMode, setToggleExamMode] = useState('old');
-  const role = 'teacher';
+  const [role] = useRole();
   return (
     <div className='px-2'>
       <h2 className='text-center py-1 text-3xl'>Online Exam</h2>
@@ -23,7 +24,7 @@ const OnlineExam = () => {
           }`}
           onClick={() => setToggleExamMode('new')}
         >
-          Launch New Exam
+          {role === 'student' ? 'Participate' : 'Launch'} New Exam
         </button>
       </div>
       {role === 'student' && (

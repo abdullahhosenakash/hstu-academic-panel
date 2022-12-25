@@ -12,11 +12,13 @@ import UpdateResult from './Pages/Shared/UpdateResult/UpdateResult';
 import Enrollment from './Pages/StudentPanel/Enrollment/Enrollment';
 import Result from './Pages/StudentPanel/Result/Result';
 import OnlineExam from './Pages/Shared/OnlineExam/OnlineExam';
-import DeleteModal from './Pages/Shared/Utilities/DeleteModal';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import useRole from './hooks/useRole';
 
 function App() {
-  const [role, setRole] = useState('student');
-
+  const [role, setRole] = useRole();
+  console.log(role, 'ss');
   return (
     <div>
       <Header role={role} />
@@ -38,7 +40,10 @@ function App() {
           className={`btn btn-sm rounded-full btn-primary  ${
             role === 'student' && 'btn-disabled'
           }`}
-          onClick={() => setRole('student')}
+          onClick={() => {
+            localStorage.setItem('role', 'student');
+            setRole('student');
+          }}
         >
           Student View
         </button>
@@ -46,7 +51,10 @@ function App() {
           className={`btn btn-sm rounded-full btn-primary ${
             role === 'teacher' && 'btn-disabled'
           }`}
-          onClick={() => setRole('teacher')}
+          onClick={() => {
+            localStorage.setItem('role', 'teacher');
+            setRole('teacher');
+          }}
         >
           Teacher View
         </button>
@@ -54,7 +62,10 @@ function App() {
           className={`btn btn-sm rounded-full btn-primary ${
             role === 'admin' && 'btn-disabled'
           }`}
-          onClick={() => setRole('admin')}
+          onClick={() => {
+            localStorage.setItem('role', 'admin');
+            setRole('admin');
+          }}
         >
           Admin View
         </button>
@@ -62,6 +73,7 @@ function App() {
       <div className='text-red-700  text-center text-4xl'>
         This buttons are for development purpose and not for final production
       </div>
+      <ToastContainer />
     </div>
   );
 }

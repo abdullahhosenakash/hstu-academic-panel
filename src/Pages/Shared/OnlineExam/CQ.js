@@ -15,7 +15,7 @@ const CQ = ({ questions, preview = false }) => {
           <form onSubmit={(e) => submitAnswers(e)}>
             <div className='card-body'>
               {/* <form onSubmit={() => console.log('ss')}> */}
-              {questions.map((q, index) => (
+              {questions?.map((q, index) => (
                 <div className='form-control' key={index}>
                   <label className='label'>
                     <span className='label-text text-lg text-white'>
