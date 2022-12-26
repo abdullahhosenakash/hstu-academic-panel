@@ -35,9 +35,9 @@ const AvailableQuestions = (props) => {
             </p>
           </td>
           <td>
-            <div className='flex gap-2'>
+            <div className='flex flex-col lg:flex-row gap-2'>
               <button
-                className='btn rounded-full btn-primary w-20'
+                className='btn btn-sm lg:btn-md rounded-full btn-primary w-20'
                 onClick={(e) => {
                   e.preventDefault();
                   updateQuestionButton(updatedQuestionText, questionId);
@@ -46,7 +46,7 @@ const AvailableQuestions = (props) => {
                 Update
               </button>
               <button
-                className='btn rounded-full btn-primary w-20'
+                className='btn btn-sm lg:btn-md rounded-full btn-primary w-20'
                 onClick={(e) => {
                   e.preventDefault();
                   editQuestionButton(!editQuestion);
@@ -61,9 +61,9 @@ const AvailableQuestions = (props) => {
         <>
           <td>{question}</td>
           <td>
-            <div className='flex gap-2'>
+            <div className='flex flex-col lg:flex-row gap-2'>
               <button
-                className='btn rounded-full btn-primary w-20'
+                className='btn btn-sm lg:btn-md rounded-full btn-primary w-20'
                 onClick={(e) => {
                   e.preventDefault();
                   editQuestionButton(questionId, !editQuestion);
@@ -73,7 +73,7 @@ const AvailableQuestions = (props) => {
               </button>
               <label
                 htmlFor='my-modal-6'
-                className='btn rounded-full btn-primary w-20'
+                className='btn btn-sm lg:btn-md rounded-full btn-primary w-20'
               >
                 Delete
               </label>

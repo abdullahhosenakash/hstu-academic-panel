@@ -6,12 +6,9 @@ const CQ = ({ questions, preview = false }) => {
     console.log('a');
   };
   return (
-    <div className='hero mt-2'>
-      <div className='hero-content flex-col lg:flex-row-reverse'>
-        <div
-          className='card flex-shrink-0 w-[40rem] shadow-[0_10px_60px_-10px_rgba(0,0,0,0.3)] bg-base-100'
-          data-theme='dark'
-        >
+    <div className='mt-2 flex justify-center'>
+      <div className=''>
+        <div className='card lg:w-[40rem]' data-theme='dark'>
           <form onSubmit={(e) => submitAnswers(e)}>
             <div className='card-body'>
               {/* <form onSubmit={() => console.log('ss')}> */}
@@ -24,7 +21,8 @@ const CQ = ({ questions, preview = false }) => {
                   </label>
                   <textarea
                     name={`answerToQuestion${q.questionId}`}
-                    className='textarea textarea-bordered bg-white text-lg text-black w-full'
+                    className='textarea textarea-bordered bg-white text-lg text-black w-full h-48'
+                    readOnly={preview}
                     placeholder='Type your answer here'
                     // disabled={preview}
                     //   defaultValue={question}
@@ -36,7 +34,7 @@ const CQ = ({ questions, preview = false }) => {
 
               <div className='form-control mt-6'>
                 <button
-                  className='btn btn-primary w-1/2 mx-auto'
+                  className='btn btn-primary lg:w-1/2 mx-auto'
                   type='submit'
                   disabled={preview}
                 >

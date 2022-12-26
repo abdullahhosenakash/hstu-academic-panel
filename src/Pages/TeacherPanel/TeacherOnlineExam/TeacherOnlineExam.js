@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import useDepartment from '../../../hooks/useDepartment';
+import useMaxDate from '../../../hooks/useMaxDate';
 import CQ from '../../Shared/OnlineExam/CQ';
 import AvailableQuestions from './AvailableQuestions';
 
 const TeacherOnlineExam = ({ toggleExamMode }) => {
   const [examType, setExamType] = useState('cq');
   const [questions, setQuestions] = useState([]);
+  const [faculty, setFaculty] = useState('');
+  const [dept] = useDepartment(faculty);
+  const [department, setDepartment] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [editQuestion, setEditQuestion] = useState(false);
   const [questionToEdit, setQuestionToEdit] = useState('');
   const [previewQuestion, setPreviewQuestion] = useState(false);
   const [level, setLevel] = useState('');
   const [semester, setSemester] = useState('');
+
+  const date = new Date().getDate();
+  const month = new Date().getMonth() + 1;
+  const year = new Date().getFullYear();
+  const [maxDate] = useMaxDate(year, month, date);
 
   const questionSubmit = (e) => {
     e.preventDefault();
@@ -56,16 +66,17 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
   const launchQuestions = (e) => {
     e.preventDefault();
     const duration = e.target.duration.value;
-    const examDate = e.target.examDate.value;
+    const examDateTime = e.target.examDateTime.value;
     const examQuestion = {
       examType,
       courseTeacher: 'ABCD',
       courseCode: 'ECE 443',
       courseTitle: 'Database Design',
       duration: duration + ' minutes',
-      examDate,
+      examDateTime,
       questions
     };
+    // console.log(examQuestion);
 
     fetch('http://localhost:5000/examQuestions', {
       method: 'post',
@@ -79,48 +90,101 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
         if (data.acknowledged) {
           toast.success('Question added!');
           e.target.reset();
+          setQuestions([]);
+          setPreviewQuestion(false);
+          setFaculty('');
+          setDepartment('');
+          setLevel('');
+          setSemester('');
         }
       });
   };
-
+  console.log(department);
   return (
     <div>
-      {toggleExamMode === 'new' && (
+      {toggleExamMode === 'new' ? (
         <>
-          <div className='flex justify-center py-2'>
-            <div className='flex gap-8'>
-              <div className='flex gap-1'>
+          <div className='fpy-2'>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className=''>
+                <label className='label'>
+                  <span className='label-text text-lg'>Faculty</span>
+                </label>
+                <select
+                  className='select select-primary w-80 lg:w-96 text-base font-normal'
+                  onChange={(e) => setFaculty(e.target.value)}
+                >
+                  <option value='' selected={!faculty}>
+                    - - Select Faculty - -
+                  </option>
+                  <option value='agriculture'>Agriculture</option>
+                  <option value='cse'>Computer Science and Engineering</option>
+                  <option value='bs'>Business Studies</option>
+                  <option value='fisheries'>Fisheries</option>
+                  <option value='dvm'>Veterinary and Animal Science</option>
+                  <option value='engineering'>Engineering</option>
+                  <option value='science'>Science</option>
+                  <option value='ssh'>Social Science and Humanities</option>
+                </select>
+              </div>
+              <div className=''>
+                <label className='label'>
+                  <span className='label-text text-lg'>Department</span>
+                </label>
+                <select
+                  className='select select-primary w-80 lg:w-96 text-base font-normal'
+                  disabled={!faculty}
+                  onChange={(e) => setDepartment(e.target.value)}
+                >
+                  <option value='' selected={!faculty}>
+                    - - Select Department - -{' '}
+                  </option>
+                  {dept?.map((d, index) => (
+                    <option key={index} value={d.deptValue}>
+                      {d.dept}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className='flex items-center justify-center gap-1 lg:gap-x-16 pb-2'>
+              <div className=''>
                 <label className='label'>
                   <span className='label-text text-lg'>Level</span>
                 </label>
                 <select
-                  className='select select-primary w-3/4 text-base font-normal'
+                  className='select select-primary w-40 text-base font-normal'
+                  disabled={!department}
                   onChange={(e) => setLevel(e.target.value)}
                 >
-                  <option value=''>Select Level</option>
+                  <option value='' selected={!faculty}>
+                    - - Level - -
+                  </option>
                   <option value='1'>1</option>
                   <option value='2'>2</option>
                   <option value='3'>3</option>
                   <option value='4'>4</option>
                 </select>
               </div>
-              <div className='flex gap-1'>
+              <div className=''>
                 <label className='label'>
                   <span className='label-text text-lg'>Semester</span>
                 </label>
                 <select
-                  className='select select-primary w-3/4 text-base font-normal'
+                  className='select select-primary w-40 text-base font-normal'
                   disabled={!level}
                   onChange={(e) => setSemester(e.target.value)}
                 >
-                  <option value=''>Select Semester</option>
+                  <option value='' selected={!faculty}>
+                    - - Semester - -
+                  </option>
                   <option value='I'>I</option>
                   <option value='II'>II</option>
                 </select>
               </div>
             </div>
           </div>
-          {semester && (
+          {semester ? (
             <div>
               <div className='flex justify-center gap-2 pb-2'>
                 <button
@@ -147,7 +211,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                 ) : (
                   <form onSubmit={(e) => questionSubmit(e)}>
                     <table
-                      className='table table-zebra w-1/2 mx-auto rounded-full'
+                      className='table table-zebra lg:w-1/2 mx-auto rounded-full'
                       data-theme='dark'
                     >
                       {/* Table Head */}
@@ -181,7 +245,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                           <tr></tr>
                         )}
                         {/* add new question */}
-                        {!editQuestion && (
+                        {!editQuestion ? (
                           <tr>
                             <td>{questions.length + 1}</td>
                             <td className='relative'>
@@ -199,18 +263,20 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                             <td>
                               <button
                                 type='submit'
-                                className='btn rounded-full btn-primary w-20'
+                                className='btn btn-sm lg:btn-md rounded-full btn-primary w-20'
                               >
                                 Add
                               </button>
                             </td>
                           </tr>
+                        ) : (
+                          <tr></tr>
                         )}
                       </tbody>
                     </table>
                   </form>
                 )}
-                {questions.length && (
+                {questions.length ? (
                   <p className='text-xl text-center py-2'>
                     {previewQuestion
                       ? 'Edit Questions?'
@@ -222,12 +288,14 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                       {previewQuestion ? 'click here' : 'see preview'}
                     </span>
                   </p>
+                ) : (
+                  ''
                 )}
 
-                {previewQuestion && (
+                {previewQuestion ? (
                   <>
                     <form onSubmit={(e) => launchQuestions(e)}>
-                      <div className='flex justify-center gap-2 py-2'>
+                      <div className='flex flex-col lg:flex-row justify-center items-center gap-2 py-2'>
                         <div className=''>
                           <label className='label'>
                             <span className='font-bold'>
@@ -238,33 +306,42 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                             type='number'
                             name='duration'
                             placeholder='Enter duration'
-                            className='input input-primary w-56'
+                            className='input input-primary w-[21rem] lg:w-60'
                             required
                             min={0}
                           />
                         </div>
                         <div className=''>
                           <label className='label'>
-                            <span className='font-bold'>Exam Date</span>
+                            <span className='font-bold'>Exam Date-Time</span>
                           </label>
                           <input
-                            type='date'
-                            name='examDate'
-                            className='input input-primary w-56'
+                            type='datetime-local'
+                            name='examDateTime'
+                            min={`${year}-${month}-${date}T08:00`}
+                            max={maxDate}
+                            defaultValue={`${year}-${month}-${date}T08:00`}
+                            className='input input-primary w-[21rem] lg:w-60'
                             required
                           />
                         </div>
                       </div>
-                      <button className='btn btn-primary rounded-full flex mx-auto w-1/5'>
+                      <button className='btn btn-primary rounded-full flex mx-auto lg:w-1/5'>
                         Launch Questions
                       </button>
                     </form>
                   </>
+                ) : (
+                  ''
                 )}
               </div>
             </div>
+          ) : (
+            ''
           )}
         </>
+      ) : (
+        ''
       )}
     </div>
   );

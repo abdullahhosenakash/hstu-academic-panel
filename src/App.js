@@ -18,7 +18,6 @@ import useRole from './hooks/useRole';
 
 function App() {
   const [role, setRole] = useRole();
-  console.log(role, 'ss');
   return (
     <div>
       <Header role={role} />

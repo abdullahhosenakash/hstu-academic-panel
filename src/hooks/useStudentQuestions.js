@@ -4,12 +4,12 @@ const useStudentQuestions = (
   dept,
   level,
   semester,
-  questionMode = 'old',
+  toggleExamMode = 'old',
   studentId = ''
 ) => {
   const [questions, setQuestions] = useState([]);
   useEffect(() => {
-    if (questionMode === 'new') {
+    if (toggleExamMode === 'new') {
       fetch(
         `http://localhost:5000/examQuestions?dept=${dept}&level=${level}&semester=${semester}${
           studentId ? `&studentId=${studentId}` : ''
@@ -18,7 +18,8 @@ const useStudentQuestions = (
         .then((res) => res.json())
         .then((data) => console.log(data));
     }
-  }, [dept, level, semester, questionMode, studentId]);
+  }, [dept, level, semester, toggleExamMode, studentId]);
+  console.log('hook');
   return [questions];
 };
 
