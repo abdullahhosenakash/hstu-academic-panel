@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import useDepartment from '../../../hooks/useDepartment';
 import useMaxDate from '../../../hooks/useMaxDate';
@@ -67,16 +67,83 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
     e.preventDefault();
     const duration = e.target.duration.value;
     const examDateTime = e.target.examDateTime.value;
+    const examTitle = e.target.examTitle.value;
+    const examYear = examDateTime.slice(0, 4);
+    const examMonth = examDateTime.slice(5, 7);
+    const eDate = examDateTime.slice(8, 10);
+    const eTime = examDateTime.split('T')[1];
+    let examDate;
+    switch (examMonth) {
+      case '01':
+        examDate = `Jan ${eDate}, ${examYear}`;
+        break;
+      case '02':
+        examDate = `Feb ${eDate}, ${examYear}`;
+        break;
+      case '03':
+        examDate = `Mar ${eDate}, ${examYear}`;
+        break;
+      case '04':
+        examDate = `Apr ${eDate}, ${examYear}`;
+        break;
+      case '05':
+        examDate = `May ${eDate}, ${examYear}`;
+        break;
+      case '06':
+        examDate = `Jun ${eDate}, ${examYear}`;
+        break;
+      case '07':
+        examDate = `Jul ${eDate}, ${examYear}`;
+        break;
+      case '08':
+        examDate = `Aug ${eDate}, ${examYear}`;
+        break;
+      case '09':
+        examDate = `Sep ${eDate}, ${examYear}`;
+        break;
+      case '10':
+        examDate = `Oct ${eDate}, ${examYear}`;
+        break;
+      case '11':
+        examDate = `Nov ${eDate}, ${examYear}`;
+        break;
+      case '12':
+        examDate = `Dec ${eDate}, ${examYear}`;
+        break;
+      default:
+    }
+    let examTime;
+    const hour = eTime.split(':')[0];
+    const minutes = eTime.split(':')[1];
+    if (hour <= 12) {
+      // am
+      if (hour < 10) {
+        examTime = `${hour.slice(1, 2)}:${minutes} AM`;
+      } else {
+        examTime = `${hour}:${minutes} AM`;
+      }
+    } else {
+      // pm
+      examTime = `${hour - 12}:${minutes} PM`;
+    }
     const examQuestion = {
       examType,
+      faculty,
+      department,
+      level,
+      semester,
       courseTeacher: 'ABCD',
+      teacherId: '12345',
       courseCode: 'ECE 443',
       courseTitle: 'Database Design',
+      examTitle,
       duration: duration + ' minutes',
-      examDateTime,
-      questions
+      examDate,
+      examTime,
+      questions,
+      answers: [],
+      examCompleted: false
     };
-    // console.log(examQuestion);
 
     fetch('http://localhost:5000/examQuestions', {
       method: 'post',
@@ -99,7 +166,6 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
         }
       });
   };
-  console.log(department);
   return (
     <div>
       {toggleExamMode === 'new' ? (
@@ -295,35 +361,54 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                 {previewQuestion ? (
                   <>
                     <form onSubmit={(e) => launchQuestions(e)}>
-                      <div className='flex flex-col lg:flex-row justify-center items-center gap-2 py-2'>
-                        <div className=''>
-                          <label className='label'>
-                            <span className='font-bold'>
-                              Time Duration (in minutes)
-                            </span>
-                          </label>
-                          <input
-                            type='number'
-                            name='duration'
-                            placeholder='Enter duration'
-                            className='input input-primary w-[21rem] lg:w-60'
-                            required
-                            min={0}
-                          />
-                        </div>
-                        <div className=''>
-                          <label className='label'>
-                            <span className='font-bold'>Exam Date-Time</span>
-                          </label>
-                          <input
-                            type='datetime-local'
-                            name='examDateTime'
-                            min={`${year}-${month}-${date}T08:00`}
-                            max={maxDate}
-                            defaultValue={`${year}-${month}-${date}T08:00`}
-                            className='input input-primary w-[21rem] lg:w-60'
-                            required
-                          />
+                      <div className='flex flex-col justify-center items-center gap-2 py-2'>
+                        <div className='flex-col lg:flex-row'>
+                          <div className=''>
+                            <label className='label'>
+                              <span className='label-text text-lg'>
+                                Exam Title
+                              </span>
+                            </label>
+                            <input
+                              className='input input-primary w-[21rem] lg:w-[31rem] text-base font-normal'
+                              name='examTitle'
+                              placeholder='Enter exam title here'
+                              required
+                            />
+                          </div>
+                          <div className='flex flex-col lg:flex-row gap-3'>
+                            <div>
+                              <label className='label'>
+                                <span className='font-bold'>
+                                  Time Duration (in minutes)
+                                </span>
+                              </label>
+                              <input
+                                type='number'
+                                name='duration'
+                                placeholder='Enter duration'
+                                className='input input-primary w-[21rem] lg:w-60'
+                                required
+                                min={0}
+                              />
+                            </div>
+                            <div className=''>
+                              <label className='label'>
+                                <span className='font-bold'>
+                                  Exam Date-Time
+                                </span>
+                              </label>
+                              <input
+                                type='datetime-local'
+                                name='examDateTime'
+                                min={`${year}-${month}-${date}T08:00`}
+                                max={maxDate}
+                                defaultValue={`${year}-${month}-${date}T08:00`}
+                                className='input input-primary w-[21rem] lg:w-60'
+                                required
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <button className='btn btn-primary rounded-full flex mx-auto lg:w-1/5'>

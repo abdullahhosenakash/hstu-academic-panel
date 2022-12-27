@@ -3,8 +3,8 @@ import React from 'react';
 const CQ = ({ questions, preview = false }) => {
   const submitAnswers = (e) => {
     e.preventDefault();
-    console.log('a');
   };
+  console.log(questions);
   return (
     <div className='mt-2 flex justify-center'>
       <div className=''>
