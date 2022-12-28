@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import useDegree from '../../../hooks/useDegree';
 import useDepartment from '../../../hooks/useDepartment';
 import useMaxDate from '../../../hooks/useMaxDate';
 import CQ from '../../Shared/OnlineExam/CQ';
@@ -11,13 +12,13 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
   const [faculty, setFaculty] = useState('');
   const [dept] = useDepartment(faculty);
   const [department, setDepartment] = useState('');
+  const [degree] = useDegree(department);
   const [errorMessage, setErrorMessage] = useState('');
   const [editQuestion, setEditQuestion] = useState(false);
   const [questionToEdit, setQuestionToEdit] = useState('');
   const [previewQuestion, setPreviewQuestion] = useState(false);
   const [level, setLevel] = useState('');
   const [semester, setSemester] = useState('');
-
   const date = new Date().getDate();
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
@@ -72,6 +73,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
     const examMonth = examDateTime.slice(5, 7);
     const eDate = examDateTime.slice(8, 10);
     const eTime = examDateTime.split('T')[1];
+
     let examDate;
     switch (examMonth) {
       case '01':
@@ -126,12 +128,27 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
       // pm
       examTime = `${hour - 12}:${minutes} PM`;
     }
+    const examTimeInMilliseconds = new Date(examDateTime).getTime();
+    let examTimeWithDurationInMilliseconds;
+    if (parseInt(duration) + parseInt(minutes) <= 60) {
+      examTimeWithDurationInMilliseconds = new Date(
+        `${examDate} ${hour}:${parseInt(minutes) + parseInt(duration)}`
+      ).getTime();
+    } else {
+      examTimeWithDurationInMilliseconds = new Date(
+        `${examDate} ${parseInt(hour) + 1}:${
+          parseInt(minutes) + parseInt(duration) - 60
+        }`
+      ).getTime();
+    }
+
     const examQuestion = {
       examType,
       faculty,
       department,
       level,
       semester,
+      degree,
       courseTeacher: 'ABCD',
       teacherId: '12345',
       courseCode: 'ECE 443',
@@ -140,6 +157,8 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
       duration: duration + ' minutes',
       examDate,
       examTime,
+      examTimeInMilliseconds,
+      examTimeWithDurationInMilliseconds,
       questions,
       answers: [],
       examCompleted: false
@@ -401,7 +420,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                               <input
                                 type='datetime-local'
                                 name='examDateTime'
-                                min={`${year}-${month}-${date}T08:00`}
+                                // min={`${year}-${month}-${date}T08:00`}
                                 max={maxDate}
                                 defaultValue={`${year}-${month}-${date}T08:00`}
                                 className='input input-primary w-[21rem] lg:w-60'

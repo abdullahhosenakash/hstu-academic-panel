@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
+import { useNavigate } from 'react-router-dom';
+import useCurrentTime from '../../../hooks/useCurrentTime';
+import ParticipateExam from './ParticipateExam';
 
 const StudentOnlineExam = ({ toggleExamMode }) => {
   const [questions, setQuestions] = useState([]);
+  const [questionModified, setQuestionModified] = useState(false);
+  const [currentTime] = useCurrentTime();
+  const navigate = useNavigate();
   const studentId = '1802102';
   const dept = 'ece';
   const level = '4';
@@ -14,20 +20,48 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
     )
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
+        // console.log(data)
         if (data) {
           setQuestions(data);
         } else {
           setQuestions([]);
         }
       });
-  }, [dept, level, semester, toggleExamMode]);
+  }, [dept, level, semester, toggleExamMode, questionModified]);
+
+  useEffect(() => {
+    questions.forEach((question) => {
+      if (question.examTimeWithDurationInMilliseconds - currentTime <= 0) {
+        const closedQuestion = { examCompleted: true };
+        fetch(
+          `http://localhost:5000/updateQuestion?questionId=${question._id}`,
+          {
+            method: 'put',
+            headers: {
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify(closedQuestion)
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => setQuestionModified(!questionModified));
+      }
+    });
+  }, [currentTime, questions, questionModified]);
+
+  const participateExam = (_id) => {
+    const selectedExam = questions.find((question) => question._id === _id);
+    navigate(`/onlineExam/participateExam`, {
+      replace: true,
+      state: selectedExam
+    });
+  };
 
   return (
     <div className=''>
       <div className='overflow-x-auto'>
         <table
-          className='table table-zebra lg:w-1/2 mx-auto rounded-full mt-2 ov'
+          className='table table-zebra lg:w-1/2 mx-auto rounded-full mt-2'
           data-theme='dark'
         >
           {/* Table Head */}
@@ -58,18 +92,44 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
                     <td>{q.examTime}</td>
                     <td>{q.duration}</td>
                     <td>
-                      <Countdown
-                        date={
-                          Date.now() +
-                          (new Date(`${q.examDate} ${q.examTime}`).getTime() -
-                            new Date().getTime())
-                        }
-                      />
+                      {q.examTimeInMilliseconds - currentTime > 0 ? (
+                        <span
+                          className={
+                            q.examTimeInMilliseconds - currentTime < 3600000
+                              ? 'text-yellow-400'
+                              : ''
+                          }
+                        >
+                          <span className='block text-sm'>
+                            Exam will start in
+                          </span>
+                          <Countdown
+                            date={
+                              Date.now() +
+                              (q.examTimeInMilliseconds - currentTime)
+                            }
+                          />
+                        </span>
+                      ) : (
+                        <span className='text-red-500'>
+                          <span className='block text-sm'>
+                            Exam has started and will close in
+                          </span>
+                          <Countdown
+                            date={
+                              Date.now() +
+                              (q.examTimeWithDurationInMilliseconds -
+                                currentTime)
+                            }
+                          />
+                        </span>
+                      )}
                     </td>
                     <td>
                       <button
                         className='btn btn-sm rounded-full btn-primary'
-                        // onClick={(e)=>}
+                        disabled={q.examTimeInMilliseconds >= currentTime}
+                        onClick={() => participateExam(q._id)}
                       >
                         Participate
                       </button>

@@ -14,6 +14,8 @@ import OnlineExam from './Pages/Shared/OnlineExam/OnlineExam';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useRole from './hooks/useRole';
+import ParticipateExam from './Pages/StudentPanel/StudentOnlineExam/ParticipateExam';
+import NotFound from './Pages/Shared/Errors/NotFound';
 
 function App() {
   const [role, setRole] = useRole();
@@ -24,6 +26,11 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/home' element={<Home />} />
         <Route path='/onlineExam' element={<OnlineExam />} />
+        <Route path='/onlineExam' element={<OnlineExam />} />
+        <Route
+          path='/onlineExam/participateExam'
+          element={<ParticipateExam />}
+        />
         <Route path='/classSchedule' element={<ClassSchedule />} />
         <Route path='/updateResult' element={<UpdateResult />} />
         <Route path='/notices' element={<Notices />} />
@@ -32,6 +39,8 @@ function App() {
         <Route path='/manageStudents' element={<ManageStudents />} />
         <Route path='/result' element={<Result />} />
         <Route path='/enrollment' element={<Enrollment />} />
+
+        <Route path='*' element={<NotFound />} />
       </Routes>
       <div className='flex lg:flex-row flex-col gap-5 justify-center pt-32'>
         <button

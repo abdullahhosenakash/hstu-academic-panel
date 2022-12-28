@@ -4,7 +4,7 @@ const CQ = ({ questions, preview = false }) => {
   const submitAnswers = (e) => {
     e.preventDefault();
   };
-  console.log(questions);
+  // console.log(questions);
   return (
     <div className='mt-2 flex justify-center'>
       <div className=''>

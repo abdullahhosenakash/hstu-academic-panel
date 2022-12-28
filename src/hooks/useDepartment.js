@@ -62,20 +62,12 @@ const useDepartment = (faculty) => {
       case 'engineering':
         setDept([
           {
-            dept: 'Agricultural and Industrial Engineering',
-            deptValue: 'aie'
+            dept: 'Agricultural Engineering',
+            deptValue: 'ae'
           },
           {
-            dept: 'Food Process and Preservation',
-            deptValue: 'fpp'
-          },
-          {
-            dept: 'Food Engineering & Technology',
-            deptValue: 'fet'
-          },
-          {
-            dept: 'Food Science and Nutrition',
-            deptValue: 'fsn'
+            dept: 'Food and Process Engineering',
+            deptValue: 'fpe'
           },
           {
             dept: 'Architecture',
