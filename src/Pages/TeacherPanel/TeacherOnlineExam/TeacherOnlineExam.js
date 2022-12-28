@@ -292,7 +292,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
               {/* Questions */}
               <div className='overflow-x-auto w-full'>
                 {previewQuestion ? (
-                  <CQ questions={questions} preview={true} />
+                  <CQ questions={questions} degree={degree} preview={true} />
                 ) : (
                   <form onSubmit={(e) => questionSubmit(e)}>
                     <table

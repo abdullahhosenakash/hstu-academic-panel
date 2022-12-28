@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CQ = ({ questions, preview = false }) => {
+const CQ = ({ questions, degree, preview = false }) => {
   const submitAnswers = (e) => {
     e.preventDefault();
   };
@@ -9,6 +9,7 @@ const CQ = ({ questions, preview = false }) => {
     <div className='mt-2 flex justify-center'>
       <div className=''>
         <div className='card lg:w-[40rem]' data-theme='dark'>
+          <h4 className='text-center'>{degree}</h4>
           <form onSubmit={(e) => submitAnswers(e)}>
             <div className='card-body'>
               {/* <form onSubmit={() => console.log('ss')}> */}
