@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
 import { useNavigate } from 'react-router-dom';
 import useCurrentTime from '../../../hooks/useCurrentTime';
+import TimeCountDown from '../../Shared/Utilities/TimeCountDown';
 import ParticipateExam from './ParticipateExam';
 
 const StudentOnlineExam = ({ toggleExamMode }) => {
@@ -15,12 +16,12 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
   const semester = 'I';
 
   useEffect(() => {
+    console.log(questionModified);
     fetch(
       `http://localhost:5000/examQuestions?department=${dept}&level=${level}&semester=${semester}&examMode=${toggleExamMode}&studentId=${studentId}`
     )
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data)
         if (data) {
           setQuestions(data);
         } else {
@@ -31,7 +32,10 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
 
   useEffect(() => {
     questions.forEach((question) => {
-      if (question.examTimeWithDurationInMilliseconds - currentTime <= 0) {
+      if (
+        question.examCompleted === false &&
+        question.examTimeWithDurationInMilliseconds - currentTime <= 0
+      ) {
         const closedQuestion = { examCompleted: true };
         fetch(
           `http://localhost:5000/updateQuestion?questionId=${question._id}`,
@@ -57,8 +61,12 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
     });
   };
 
+  const viewResult = () => {
+    console.log('hh');
+  };
+
   return (
-    <div className=''>
+    <div className='pt-2'>
       <div className='overflow-x-auto'>
         <table
           className='table table-zebra lg:w-1/2 mx-auto rounded-full mt-2'
@@ -74,7 +82,11 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
               <th className=''>Date</th>
               <th className=''>Time</th>
               <th className=''>Duration</th>
-              <th className=''>Time Remaining</th>
+              {toggleExamMode === 'new' ? (
+                <th className=''>Time Remaining</th>
+              ) : (
+                <th className=''>Result Status</th>
+              )}
               <th className='w-8'>Action</th>
             </tr>
           </thead>
@@ -83,7 +95,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
             {questions.length ? (
               <>
                 {questions.map((q, index) => (
-                  <tr key={index}>
+                  <tr key={index} className='h-24'>
                     <td>{index + 1}</td>
                     <td>{q.courseCode}</td>
                     <td>{q.courseTeacher}</td>
@@ -91,48 +103,70 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
                     <td>{q.examDate}</td>
                     <td>{q.examTime}</td>
                     <td>{q.duration}</td>
+                    {toggleExamMode === 'new' ? (
+                      <td>
+                        {q.examTimeInMilliseconds - currentTime > 0 ? (
+                          <span
+                            className={
+                              q.examTimeInMilliseconds - currentTime < 3600000
+                                ? 'text-yellow-400'
+                                : ''
+                            }
+                          >
+                            <span className='block text-sm'>
+                              Exam will be started in
+                            </span>
+                            {/* <Countdown
+                              className='block'
+                              date={
+                                Date.now() +
+                                (q.examTimeInMilliseconds - currentTime)
+                              }
+                            /> */}
+                            <TimeCountDown
+                              deadline={q.examTimeInMilliseconds}
+                            />
+                          </span>
+                        ) : (
+                          <span className='text-red-500'>
+                            <span className='block text-sm'>
+                              Exam has started and <br /> will be closed in
+                            </span>
+                            {/* <Countdown
+                              className='block'
+                              date={
+                                Date.now() +
+                                (q.examTimeWithDurationInMilliseconds -
+                                  currentTime)
+                              }
+                            /> */}
+                            <TimeCountDown
+                              deadline={q.examTimeWithDurationInMilliseconds}
+                            />
+                          </span>
+                        )}
+                      </td>
+                    ) : (
+                      <td>{q.resultStatus}</td>
+                    )}
                     <td>
-                      {q.examTimeInMilliseconds - currentTime > 0 ? (
-                        <span
-                          className={
-                            q.examTimeInMilliseconds - currentTime < 3600000
-                              ? 'text-yellow-400'
-                              : ''
-                          }
+                      {toggleExamMode === 'new' ? (
+                        <button
+                          className='btn btn-sm rounded-full btn-primary'
+                          disabled={q.examTimeInMilliseconds >= currentTime}
+                          onClick={() => participateExam(q._id)}
                         >
-                          <span className='block text-sm'>
-                            Exam will start in
-                          </span>
-                          <Countdown
-                            date={
-                              Date.now() +
-                              (q.examTimeInMilliseconds - currentTime)
-                            }
-                          />
-                        </span>
+                          Participate
+                        </button>
                       ) : (
-                        <span className='text-red-500'>
-                          <span className='block text-sm'>
-                            Exam has started and will close in
-                          </span>
-                          <Countdown
-                            date={
-                              Date.now() +
-                              (q.examTimeWithDurationInMilliseconds -
-                                currentTime)
-                            }
-                          />
-                        </span>
+                        <button
+                          className='btn btn-sm rounded-full btn-primary'
+                          disabled={q.resultStatus === 'not published'}
+                          onClick={() => viewResult(q._id)}
+                        >
+                          View Result
+                        </button>
                       )}
-                    </td>
-                    <td>
-                      <button
-                        className='btn btn-sm rounded-full btn-primary'
-                        disabled={q.examTimeInMilliseconds >= currentTime}
-                        onClick={() => participateExam(q._id)}
-                      >
-                        Participate
-                      </button>
                     </td>
                   </tr>
                 ))}
@@ -142,6 +176,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
             )}
           </tbody>
         </table>
+
         {/* <CQ questions={questions} /> */}
       </div>
     </div>

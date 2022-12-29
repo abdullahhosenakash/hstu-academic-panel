@@ -161,7 +161,8 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
       examTimeWithDurationInMilliseconds,
       questions,
       answers: [],
-      examCompleted: false
+      examCompleted: false,
+      resultStatus: 'not published'
     };
 
     fetch('http://localhost:5000/examQuestions', {
@@ -292,7 +293,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
               {/* Questions */}
               <div className='overflow-x-auto w-full'>
                 {previewQuestion ? (
-                  <CQ questions={questions} degree={degree} preview={true} />
+                  <CQ testQuestions={questions} preview={true} />
                 ) : (
                   <form onSubmit={(e) => questionSubmit(e)}>
                     <table
@@ -409,6 +410,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                                 className='input input-primary w-[21rem] lg:w-60'
                                 required
                                 min={0}
+                                max={59}
                               />
                             </div>
                             <div className=''>
@@ -420,7 +422,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                               <input
                                 type='datetime-local'
                                 name='examDateTime'
-                                // min={`${year}-${month}-${date}T08:00`}
+                                min={`${year}-${month}-${date}T08:00`}
                                 max={maxDate}
                                 defaultValue={`${year}-${month}-${date}T08:00`}
                                 className='input input-primary w-[21rem] lg:w-60'

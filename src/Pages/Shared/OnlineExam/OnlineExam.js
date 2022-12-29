@@ -6,6 +6,7 @@ import TeacherOnlineExam from '../../TeacherPanel/TeacherOnlineExam/TeacherOnlin
 const OnlineExam = () => {
   const [toggleExamMode, setToggleExamMode] = useState('old');
   const [role] = useRole();
+  console.log(toggleExamMode);
   return (
     <div className='px-2'>
       <h2 className='text-center py-1 text-3xl'>Online Exam</h2>

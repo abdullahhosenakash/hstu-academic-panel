@@ -1,19 +1,42 @@
 import React from 'react';
 
-const CQ = ({ questions, degree, preview = false }) => {
+const CQ = ({ testQuestions, selectedExam, preview = false }) => {
+  const {
+    _id,
+    degree,
+    level,
+    semester,
+    examTitle,
+    courseTitle,
+    courseCode,
+    duration,
+    questions
+  } = selectedExam || {};
   const submitAnswers = (e) => {
     e.preventDefault();
+    console.log(e.target);
   };
-  // console.log(questions);
+  console.log(selectedExam);
   return (
     <div className='mt-2 flex justify-center'>
       <div className=''>
         <div className='card lg:w-[40rem]' data-theme='dark'>
-          <h4 className='text-center'>{degree}</h4>
+          <div className='text-center pt-2'>
+            <h3 className='text-lg'>
+              {degree} <span className='pl-4'>Level: {level}</span>
+              <span className='pl-2'> Semester: {semester}</span>
+            </h3>
+            <p>
+              Course Code: {courseCode}{' '}
+              <span className='pl-3'>Course Title: {courseTitle}</span>
+            </p>
+            <p>
+              {examTitle} {new Date().getFullYear()}
+            </p>
+          </div>
           <form onSubmit={(e) => submitAnswers(e)}>
             <div className='card-body'>
-              {/* <form onSubmit={() => console.log('ss')}> */}
-              {questions?.map((q, index) => (
+              {(preview ? testQuestions : questions)?.map((q, index) => (
                 <div className='form-control' key={index}>
                   <label className='label'>
                     <span className='label-text text-lg text-white'>
@@ -25,10 +48,6 @@ const CQ = ({ questions, degree, preview = false }) => {
                     className='textarea textarea-bordered bg-white text-lg text-black w-full h-48'
                     readOnly={preview}
                     placeholder='Type your answer here'
-                    // disabled={preview}
-                    //   defaultValue={question}
-                    //   onFocus={() => setErrorMessage('')}
-                    //   onChange={(e) => setUpdatedQuestionText(e.target.value)}
                   />
                 </div>
               ))}

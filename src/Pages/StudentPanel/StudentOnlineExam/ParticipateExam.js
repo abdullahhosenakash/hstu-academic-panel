@@ -3,14 +3,12 @@ import { useLocation } from 'react-router-dom';
 import CQ from '../../Shared/OnlineExam/CQ';
 
 const ParticipateExam = () => {
-  const {
-    state: { _id, examType, questions }
-  } = useLocation();
+  const { state: selectedExam } = useLocation();
   //   const selectedExam=
-  console.log(questions);
   return (
     <div>
-      <CQ questions={questions}></CQ>
+      <h2 className='text-3xl text-center'>Participate Exam</h2>
+      <CQ selectedExam={selectedExam}></CQ>
     </div>
   );
 };
