@@ -48,7 +48,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
           }
         )
           .then((res) => res.json())
-          .then((data) => setQuestionModified(!questionModified));
+          .then(() => setQuestionModified(!questionModified));
       }
     });
   }, [currentTime, questions, questionModified]);
@@ -57,7 +57,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
     const selectedExam = questions.find((question) => question._id === _id);
     navigate(`/onlineExam/participateExam`, {
       replace: true,
-      state: selectedExam
+      state: { selectedExam, studentId }
     });
   };
 
@@ -153,7 +153,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
                       {toggleExamMode === 'new' ? (
                         <button
                           className='btn btn-sm rounded-full btn-primary'
-                          disabled={q.examTimeInMilliseconds >= currentTime}
+                          // disabled={q.examTimeInMilliseconds >= currentTime}
                           onClick={() => participateExam(q._id)}
                         >
                           Participate
