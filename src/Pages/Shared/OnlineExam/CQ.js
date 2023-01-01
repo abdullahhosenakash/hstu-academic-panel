@@ -6,7 +6,7 @@ const CQ = ({
   testQuestions = [],
   selectedExam,
   preview = false,
-  submitAnswers
+  submitFinalAnswer
 }) => {
   const {
     _id,
@@ -83,7 +83,7 @@ const CQ = ({
           ) : (
             ''
           )}
-          <form onSubmit={(e) => submitAnswers(e, answers)}>
+          <form onSubmit={(e) => submitFinalAnswer(e, answers)}>
             <div className='card-body'>
               {(preview ? testQuestions : questions)?.map((q, index) => (
                 <div className='form-control' key={index}>
@@ -108,7 +108,6 @@ const CQ = ({
                         } else {
                           const answer = {
                             questionId: q.questionId,
-                            question: q.question,
                             answer: e.target.value
                           };
                           setAnswers([...answers, answer]);

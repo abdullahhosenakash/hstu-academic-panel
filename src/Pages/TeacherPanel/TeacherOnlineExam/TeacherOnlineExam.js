@@ -56,7 +56,6 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
   const modifiedMaxDate = `${
     maxDate.split('T')[0].split('-')[0]
   }-${maxMonth}-${maxDay}T${maxDate.split('T')[1]}`;
-  console.log(modifiedMaxDate);
 
   const questionSubmit = (e) => {
     e.preventDefault();
@@ -164,7 +163,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
     }
     const examTimeInMilliseconds = new Date(examDateTime).getTime();
     let examTimeWithDurationInMilliseconds;
-    if (parseInt(duration) + parseInt(minutes) <= 60) {
+    if (parseInt(duration) + parseInt(minutes) < 60) {
       examTimeWithDurationInMilliseconds = new Date(
         `${examDate} ${hour}:${parseInt(minutes) + parseInt(duration)}`
       ).getTime();
@@ -456,7 +455,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                               <input
                                 type='datetime-local'
                                 name='examDateTime'
-                                min={`${year}-${currentMonth}-${currentDate}T08:00`}
+                                // min={`${year}-${currentMonth}-${currentDate}T08:00`}
                                 max={modifiedMaxDate}
                                 defaultValue={`${year}-${currentMonth}-${currentDate}T08:00`}
                                 className='input input-primary w-[21rem] lg:w-60'

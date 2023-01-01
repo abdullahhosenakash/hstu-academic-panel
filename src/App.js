@@ -20,6 +20,7 @@ import TimeCountDown from './Pages/Shared/Utilities/TimeCountDown';
 
 function App() {
   const [role, setRole] = useRole();
+  // console.log(setLoading);
   return (
     <div>
       <Header role={role} />

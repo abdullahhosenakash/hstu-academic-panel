@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 const useMaxDate = (year, month, date) => {
-  console.log(month);
   const [maxDate, setMaxDate] = useState('');
   useEffect(() => {
     // if 31 day months

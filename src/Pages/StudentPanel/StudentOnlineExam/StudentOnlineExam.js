@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Countdown from 'react-countdown';
 import { useNavigate } from 'react-router-dom';
 import useCurrentTime from '../../../hooks/useCurrentTime';
+import LoadingSpinner from '../../Shared/Utilities/LoadingSpinner';
 import TimeCountDown from '../../Shared/Utilities/TimeCountDown';
 import ParticipateExam from './ParticipateExam';
 
@@ -9,6 +9,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
   const [questions, setQuestions] = useState([]);
   const [questionModified, setQuestionModified] = useState(false);
   const [currentTime] = useCurrentTime();
+  const [pageLoading, setPageLoading] = useState(false);
   const navigate = useNavigate();
   const studentId = '1802102';
   const dept = 'ece';
@@ -16,7 +17,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
   const semester = 'I';
 
   useEffect(() => {
-    console.log(questionModified);
+    setPageLoading(true);
     fetch(
       `http://localhost:5000/examQuestions?department=${dept}&level=${level}&semester=${semester}&examMode=${toggleExamMode}&studentId=${studentId}`
     )
@@ -24,6 +25,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
       .then((data) => {
         if (data) {
           setQuestions(data);
+          setPageLoading(false);
         } else {
           setQuestions([]);
         }
@@ -64,6 +66,10 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
   const viewResult = () => {
     console.log('hh');
   };
+
+  if (pageLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className='pt-2'>
@@ -116,13 +122,6 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
                             <span className='block text-sm'>
                               Exam will be started in
                             </span>
-                            {/* <Countdown
-                              className='block'
-                              date={
-                                Date.now() +
-                                (q.examTimeInMilliseconds - currentTime)
-                              }
-                            /> */}
                             <TimeCountDown
                               deadline={q.examTimeInMilliseconds}
                             />
@@ -132,14 +131,6 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
                             <span className='block text-sm'>
                               Exam has started and <br /> will be closed in
                             </span>
-                            {/* <Countdown
-                              className='block'
-                              date={
-                                Date.now() +
-                                (q.examTimeWithDurationInMilliseconds -
-                                  currentTime)
-                              }
-                            /> */}
                             <TimeCountDown
                               deadline={q.examTimeWithDurationInMilliseconds}
                             />
@@ -151,13 +142,25 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
                     )}
                     <td>
                       {toggleExamMode === 'new' ? (
-                        <button
-                          className='btn btn-sm rounded-full btn-primary'
-                          // disabled={q.examTimeInMilliseconds >= currentTime}
-                          onClick={() => participateExam(q._id)}
-                        >
-                          Participate
-                        </button>
+                        <>
+                          <button
+                            className='btn btn-sm rounded-full btn-primary'
+                            disabled={
+                              q.participated ||
+                              q.examTimeInMilliseconds >= currentTime
+                            }
+                            onClick={() => participateExam(q._id)}
+                          >
+                            Participate
+                          </button>
+                          {q.participated ? (
+                            <span className='block text-yellow-400'>
+                              You already participated
+                            </span>
+                          ) : (
+                            ''
+                          )}
+                        </>
                       ) : (
                         <button
                           className='btn btn-sm rounded-full btn-primary'
