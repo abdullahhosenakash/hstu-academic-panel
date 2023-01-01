@@ -19,10 +19,44 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
   const [previewQuestion, setPreviewQuestion] = useState(false);
   const [level, setLevel] = useState('');
   const [semester, setSemester] = useState('');
-  const date = new Date().getDate();
-  const month = new Date().getMonth() + 1;
+
+  const dateMonthModifier = (date, month) => {
+    let newDate, newMonth;
+    if (`${date}`.length === 1) {
+      newDate = `0${date}`;
+    } else {
+      newDate = `${date}`;
+    }
+
+    if (`${month}`.length === 1) {
+      newMonth = `0${month}`;
+    } else {
+      newMonth = `${month}`;
+    }
+
+    return [newDate, newMonth];
+  };
+
   const year = new Date().getFullYear();
-  const [maxDate] = useMaxDate(year, month, date);
+  const [currentDate, currentMonth] = dateMonthModifier(
+    new Date().getDate(),
+    new Date().getMonth() + 1
+  );
+
+  const [maxDate] = useMaxDate(
+    year,
+    parseInt(currentMonth),
+    parseInt(currentDate)
+  );
+
+  const [maxDay, maxMonth] = dateMonthModifier(
+    maxDate.split('T')[0].split('-')[2],
+    maxDate.split('T')[0].split('-')[1]
+  );
+  const modifiedMaxDate = `${
+    maxDate.split('T')[0].split('-')[0]
+  }-${maxMonth}-${maxDay}T${maxDate.split('T')[1]}`;
+  console.log(modifiedMaxDate);
 
   const questionSubmit = (e) => {
     e.preventDefault();
@@ -422,9 +456,9 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                               <input
                                 type='datetime-local'
                                 name='examDateTime'
-                                min={`${year}-${month}-${date}T08:00`}
-                                max={maxDate}
-                                defaultValue={`${year}-${month}-${date}T08:00`}
+                                min={`${year}-${currentMonth}-${currentDate}T08:00`}
+                                max={modifiedMaxDate}
+                                defaultValue={`${year}-${currentMonth}-${currentDate}T08:00`}
                                 className='input input-primary w-[21rem] lg:w-60'
                                 required
                               />

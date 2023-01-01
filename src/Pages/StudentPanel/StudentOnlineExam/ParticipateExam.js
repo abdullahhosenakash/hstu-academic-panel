@@ -26,14 +26,6 @@ const ParticipateExam = ({ preview = false, testQuestions }) => {
   };
   return (
     <div>
-      {/* <div className='sticky inset-x-0 top-0 bg-green-500'>
-        <h2 className='text-3xl text-center'>Participate Exam</h2>
-        <div className='flex justify-center'>
-          <TimeCountDown
-            deadline={selectedExam.examTimeWithDurationInMilliseconds}
-          />
-        </div>
-      </div> */}
       <CQ selectedExam={selectedExam} submitAnswers={submitAnswers}></CQ>
     </div>
   );
