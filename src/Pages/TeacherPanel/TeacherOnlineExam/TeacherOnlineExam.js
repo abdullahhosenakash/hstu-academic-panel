@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import useDegree from '../../../hooks/useDegree';
 import useDepartment from '../../../hooks/useDepartment';
 import useMaxDate from '../../../hooks/useMaxDate';
 import CQ from '../../Shared/OnlineExam/CQ';
 import AvailableQuestions from './AvailableQuestions';
+import OldExams from './OldExams';
 
 const TeacherOnlineExam = ({ toggleExamMode }) => {
   const [examType, setExamType] = useState('cq');
@@ -19,6 +20,10 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
   const [previewQuestion, setPreviewQuestion] = useState(false);
   const [level, setLevel] = useState('');
   const [semester, setSemester] = useState('');
+  const [oldQuestions, setOldQuestions] = useState([]);
+  const [questionModified, setQuestionModified] = useState(false);
+
+  const teacherId = '12345';
 
   const dateMonthModifier = (date, month) => {
     let newDate, newMonth;
@@ -100,6 +105,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
   const launchQuestions = (e) => {
     e.preventDefault();
     const duration = e.target.duration.value;
+    const examMarks = e.target.examMarks.value;
     const examDateTime = e.target.examDateTime.value;
     const examTitle = e.target.examTitle.value;
     const examYear = examDateTime.slice(0, 4);
@@ -188,6 +194,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
       courseTitle: 'Database Design',
       examTitle,
       duration: duration + ' minutes',
+      examMarks,
       examDate,
       examTime,
       examTimeInMilliseconds,
@@ -198,7 +205,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
       resultStatus: 'not published'
     };
 
-    fetch('http://localhost:5000/examQuestions', {
+    fetch('https://hstu-online-services-server.onrender.com/examQuestions', {
       method: 'post',
       headers: {
         'content-type': 'application/json'
@@ -219,6 +226,23 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
         }
       });
   };
+
+  useEffect(() => {
+    if (toggleExamMode === 'old') {
+      fetch(
+        `https://hstu-online-services-server.onrender.com/teacherExamQuestions?teacherId=${teacherId}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data) {
+            setOldQuestions(data);
+          } else {
+            setOldQuestions([]);
+          }
+        });
+    }
+  }, [toggleExamMode, questionModified]);
+
   return (
     <div>
       {toggleExamMode === 'new' ? (
@@ -416,18 +440,32 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                     <form onSubmit={(e) => launchQuestions(e)}>
                       <div className='flex flex-col justify-center items-center gap-2 py-2'>
                         <div className='flex-col lg:flex-row'>
-                          <div className=''>
-                            <label className='label'>
-                              <span className='label-text text-lg'>
-                                Exam Title
-                              </span>
-                            </label>
-                            <input
-                              className='input input-primary w-[21rem] lg:w-[31rem] text-base font-normal'
-                              name='examTitle'
-                              placeholder='Enter exam title here'
-                              required
-                            />
+                          <div className='flex flex-col lg:flex-row gap-3'>
+                            <div className=''>
+                              <label className='label'>
+                                <span className='font-bold'>Exam Title</span>
+                              </label>
+                              <input
+                                type='text'
+                                className='input input-primary w-[21rem] lg:w-60 text-base font-normal'
+                                name='examTitle'
+                                placeholder='Enter exam title here'
+                                required
+                              />
+                            </div>
+                            <div className=''>
+                              <label className='label'>
+                                <span className='font-bold'>Exam Marks</span>
+                              </label>
+                              <input
+                                type='number'
+                                className='input input-primary w-[21rem] lg:w-60'
+                                name='examMarks'
+                                placeholder='Enter exam marks here'
+                                min={5}
+                                required
+                              />
+                            </div>
                           </div>
                           <div className='flex flex-col lg:flex-row gap-3'>
                             <div>
@@ -455,7 +493,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                               <input
                                 type='datetime-local'
                                 name='examDateTime'
-                                // min={`${year}-${currentMonth}-${currentDate}T08:00`}
+                                min={`${year}-${currentMonth}-${currentDate}T08:00`}
                                 max={modifiedMaxDate}
                                 defaultValue={`${year}-${currentMonth}-${currentDate}T08:00`}
                                 className='input input-primary w-[21rem] lg:w-60'
@@ -480,7 +518,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
           )}
         </>
       ) : (
-        ''
+        <OldExams oldQuestions={oldQuestions} />
       )}
     </div>
   );

@@ -23,7 +23,7 @@ const CQ = ({
   const [currentTime] = useCurrentTime();
   const [timeUp, setTimeUp] = useState(false);
   const [warning, setWarning] = useState(false);
-  const [answers, setAnswers] = useState([]);
+  const [answersOfQuestions, setAnswersOfQuestions] = useState([]);
 
   // console.log(timeUp);
 
@@ -83,7 +83,7 @@ const CQ = ({
           ) : (
             ''
           )}
-          <form onSubmit={(e) => submitFinalAnswer(e, answers)}>
+          <form onSubmit={(e) => submitFinalAnswer(e, answersOfQuestions)}>
             <div className='card-body'>
               {(preview ? testQuestions : questions)?.map((q, index) => (
                 <div className='form-control' key={index}>
@@ -100,7 +100,7 @@ const CQ = ({
                     required
                     onBlur={(e) => {
                       if (e.target.value) {
-                        const availableQuestion = answers.find(
+                        const availableQuestion = answersOfQuestions.find(
                           (a) => a.questionId === q.questionId
                         );
                         if (availableQuestion) {
@@ -110,7 +110,10 @@ const CQ = ({
                             questionId: q.questionId,
                             answer: e.target.value
                           };
-                          setAnswers([...answers, answer]);
+                          setAnswersOfQuestions([
+                            ...answersOfQuestions,
+                            answer
+                          ]);
                         }
                       }
                     }}

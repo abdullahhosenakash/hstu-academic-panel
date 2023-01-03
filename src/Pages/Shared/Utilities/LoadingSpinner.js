@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BarLoader } from 'react-spinners';
 
 const LoadingSpinner = () => {
   return (
-    <div className='absolute top-16'>
+    <div className='absolute top-16 left-0 right-0'>
       <BarLoader
         color='#4338ca'
         width={window.screen.width}

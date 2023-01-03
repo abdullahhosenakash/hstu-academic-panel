@@ -17,10 +17,10 @@ import useRole from './hooks/useRole';
 import ParticipateExam from './Pages/StudentPanel/StudentOnlineExam/ParticipateExam';
 import NotFound from './Pages/Shared/Errors/NotFound';
 import TimeCountDown from './Pages/Shared/Utilities/TimeCountDown';
+import EvaluateAnswers from './Pages/TeacherPanel/TeacherOnlineExam/EvaluateAnswers';
 
 function App() {
   const [role, setRole] = useRole();
-  // console.log(setLoading);
   return (
     <div>
       <Header role={role} />
@@ -32,6 +32,10 @@ function App() {
         <Route
           path='/onlineExam/participateExam'
           element={<ParticipateExam />}
+        />
+        <Route
+          path='/onlineExam/evaluateAnswers'
+          element={<EvaluateAnswers />}
         />
         <Route path='/classSchedule' element={<ClassSchedule />} />
         <Route path='/updateResult' element={<UpdateResult />} />

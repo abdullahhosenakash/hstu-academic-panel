@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import useCurrentTime from '../../../hooks/useCurrentTime';
 import LoadingSpinner from '../../Shared/Utilities/LoadingSpinner';
 import TimeCountDown from '../../Shared/Utilities/TimeCountDown';
-import ParticipateExam from './ParticipateExam';
 
 const StudentOnlineExam = ({ toggleExamMode }) => {
   const [questions, setQuestions] = useState([]);
@@ -11,7 +10,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
   const [currentTime] = useCurrentTime();
   const [pageLoading, setPageLoading] = useState(false);
   const navigate = useNavigate();
-  const studentId = '1802102';
+  const studentId = '1802126';
   const dept = 'ece';
   const level = '4';
   const semester = 'I';
@@ -19,7 +18,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
   useEffect(() => {
     setPageLoading(true);
     fetch(
-      `http://localhost:5000/examQuestions?department=${dept}&level=${level}&semester=${semester}&examMode=${toggleExamMode}&studentId=${studentId}`
+      `https://hstu-online-services-server.onrender.com/examQuestions?department=${dept}&level=${level}&semester=${semester}&examMode=${toggleExamMode}&studentId=${studentId}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -40,7 +39,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
       ) {
         const closedQuestion = { examCompleted: true };
         fetch(
-          `http://localhost:5000/updateQuestion?questionId=${question._id}`,
+          `https://hstu-online-services-server.onrender.com/updateQuestion?questionId=${question._id}`,
           {
             method: 'put',
             headers: {
@@ -83,7 +82,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
             <tr>
               <th className='w-8'>SL</th>
               <td>Course Code</td>
-              <td>Course Teacher</td>
+              <th>Course Teacher</th>
               <th className=''>Exam Title</th>
               <th className=''>Date</th>
               <th className=''>Time</th>

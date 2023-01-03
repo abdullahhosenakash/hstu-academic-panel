@@ -15,7 +15,6 @@ const AvailableQuestions = (props) => {
   } = props;
   const [updatedQuestionText, setUpdatedQuestionText] = useState('');
   const { questionId, question } = q || {};
-  console.log(questionToEdit);
   return (
     <tr>
       <td>{index + 1}</td>
@@ -59,7 +58,7 @@ const AvailableQuestions = (props) => {
         </>
       ) : (
         <>
-          <td>{question}</td>
+          <td className=''>{question}</td>
           <td>
             <div className='flex flex-col lg:flex-row gap-2'>
               <button
