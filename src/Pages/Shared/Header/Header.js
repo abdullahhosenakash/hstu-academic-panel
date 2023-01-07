@@ -5,7 +5,7 @@ import CustomLink from './CustomLink';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 
 const Header = ({ role }) => {
-  const user = 'v';
+  const user ='';
   const NavItems = () => {
     return (
       <>

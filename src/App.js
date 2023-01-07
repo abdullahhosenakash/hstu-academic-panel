@@ -16,8 +16,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import useRole from './hooks/useRole';
 import ParticipateExam from './Pages/StudentPanel/StudentOnlineExam/ParticipateExam';
 import NotFound from './Pages/Shared/Errors/NotFound';
-import TimeCountDown from './Pages/Shared/Utilities/TimeCountDown';
 import EvaluateAnswers from './Pages/TeacherPanel/TeacherOnlineExam/EvaluateAnswers';
+import Login from './Pages/Authentications/Login';
+import SignUp from './Pages/Authentications/SignUp';
 
 function App() {
   const [role, setRole] = useRole();
@@ -45,6 +46,9 @@ function App() {
         <Route path='/manageStudents' element={<ManageStudents />} />
         <Route path='/result' element={<Result />} />
         <Route path='/enrollment' element={<Enrollment />} />
+
+        <Route path='/login' element={<Login />} />
+        <Route path='/signUp' element={<SignUp />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
