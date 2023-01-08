@@ -3,9 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import CustomLink from './CustomLink';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import auth from '../../../firebase.config';
 
 const Header = ({ role }) => {
-  const user ='';
+  const [u] = useAuthState(auth);
+  const user = '';
+  console.log(u);
   const NavItems = () => {
     return (
       <>
