@@ -1,24 +1,31 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import auth from '../../firebase.config';
 import {
+  useAuthState,
   useCreateUserWithEmailAndPassword,
   useSendEmailVerification,
   useSignInWithGoogle,
 } from 'react-firebase-hooks/auth';
 import LoadingSpinner from '../Shared/Utilities/LoadingSpinner';
 import { signOut } from 'firebase/auth';
+import googleLogo from '../../assets/google.png';
+import googleLogoBlackAndWhite from '../../assets/google-black.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 const SignUp = () => {
   const [userMode, setUserMode] = useState('student');
   const [userExists, setUserExists] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [findingUser, setFindingUser] = useState(false);
   const [userId, setUserId] = useState('');
-  const [createUserWithEmailAndPassword, user, loading, error] =
+  const [createUserWithEmailAndPassword, , loading, error] =
     useCreateUserWithEmailAndPassword(auth);
-  const [signInWithGoogle, googleUser, googleLoading, googleError] =
+  const [signInWithGoogle, , googleLoading, googleError] =
     useSignInWithGoogle(auth);
-  const [sendEmailVerification, sending, verificationError] =
+  const [sendEmailVerification, , sending, verificationError] =
     useSendEmailVerification(auth);
+  const [user] = useAuthState(auth);
 
   const userSignUp = (e, signUpMethod) => {
     e.preventDefault();
@@ -31,14 +38,20 @@ const SignUp = () => {
     }
   };
 
+  if (user) {
+  }
+  console.log(user);
+
   return (
     <div>
-      {(loading || googleLoading || sending) && <LoadingSpinner />}
+      {(loading || googleLoading || sending || findingUser) && (
+        <LoadingSpinner />
+      )}
       <button className='btn' onClick={() => signOut(auth)}>
         sign out
       </button>
       <h1 className='text-3xl font-bold text-center mt-3'>Sign Up now!</h1>
-      <div className='flex  gap-3 justify-center pt-2'>
+      <div className='flex gap-3 justify-center pt-2'>
         <button
           className={`btn btn-sm rounded-full btn-primary w-42 lg:uppercase normal-case  ${
             userMode === 'student' ? 'btn-disabled' : ''
@@ -54,13 +67,12 @@ const SignUp = () => {
           onClick={() => setUserMode('teacher')}
         >
           Teacher
-          {/* {role === 'student' ? 'Participate' : 'Launch'} New Exam */}
         </button>
       </div>
       <form onSubmit={(e) => userSignUp(e, 'emailPassword')}>
         <div className='card w-96 mx-auto shadow-2xl bg-base-100'>
           <div className='card-body pt-1'>
-            {/* Student ID  */}
+            {/* User ID  */}
             <div className='form-control'>
               <label className='label'>
                 <span className='label-text'>
@@ -77,9 +89,17 @@ const SignUp = () => {
                 onBlur={(e) => setUserId(e.target.value)}
                 onChange={(e) => {
                   if (e.target.value.length === 8) {
-                    fetch(
-                      `http://localhost:5000/findUser?userId=${e.target.value}&userMode=${userMode}`
-                    )
+                    setFindingUser(true);
+                    fetch('http://localhost:5000/findUser', {
+                      method: 'post',
+                      headers: {
+                        'content-type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        userId: e.target.value,
+                        userMode,
+                      }),
+                    })
                       .then((res) => res.json())
                       .then((data) => {
                         if (data.result === 1) {
@@ -93,6 +113,9 @@ const SignUp = () => {
                           setErrorMessage('Wrong User ID');
                         }
                       });
+                    setFindingUser(false);
+                  } else {
+                    setUserExists(true);
                   }
                 }}
               />
@@ -105,8 +128,7 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* divider */}
-            <div className='flex flex-col w-full border-opacity-50'>
+            <div className='flex flex-col w-full border-opacity-50 mt-2'>
               <button
                 className='btn btn-primary'
                 disabled={userExists}
@@ -115,12 +137,16 @@ const SignUp = () => {
                   userSignUp(e, 'google');
                 }}
               >
+                {userExists ? (
+                  <span className='text-lg mr-2'>
+                    <FontAwesomeIcon icon={faGoogle} />
+                  </span>
+                ) : (
+                  <img src={googleLogo} alt='' className='w-8 mr-2' />
+                )}
                 Sign Up with Google
               </button>
               <div className='divider'>OR</div>
-              {/* <div className='grid h-20 card bg-base-300 rounded-box place-items-center'>
-                content
-              </div> */}
               {/* Email */}
               <div className='form-control'>
                 <label className='label'>

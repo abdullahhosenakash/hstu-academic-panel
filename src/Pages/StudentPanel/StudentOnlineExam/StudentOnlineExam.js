@@ -18,7 +18,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
   useEffect(() => {
     setPageLoading(true);
     fetch(
-      `https://hstu-online-services-server.onrender.com/examQuestions?department=${dept}&level=${level}&semester=${semester}&examMode=${toggleExamMode}&studentId=${studentId}`
+      `http://localhost:5000/examQuestions?department=${dept}&level=${level}&semester=${semester}&examMode=${toggleExamMode}&studentId=${studentId}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -39,13 +39,13 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
       ) {
         const closedQuestion = { examCompleted: true };
         fetch(
-          `https://hstu-online-services-server.onrender.com/updateQuestion?questionId=${question._id}`,
+          `http://localhost:5000/updateQuestion?questionId=${question._id}`,
           {
             method: 'put',
             headers: {
-              'content-type': 'application/json'
+              'content-type': 'application/json',
             },
-            body: JSON.stringify(closedQuestion)
+            body: JSON.stringify(closedQuestion),
           }
         )
           .then((res) => res.json())
@@ -58,7 +58,7 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
     const selectedExam = questions.find((question) => question._id === _id);
     navigate(`/onlineExam/participateExam`, {
       replace: true,
-      state: { selectedExam, studentId }
+      state: { selectedExam, studentId },
     });
   };
 

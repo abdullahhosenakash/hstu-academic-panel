@@ -68,7 +68,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
     if (questionText) {
       const newQuestion = {
         questionId: questions.length + 1,
-        question: questionText
+        question: questionText,
       };
       setQuestions([...questions, newQuestion]);
       e.target.reset();
@@ -202,15 +202,15 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
       questions,
       answers: [],
       examCompleted: false,
-      resultStatus: 'not published'
+      resultStatus: 'not published',
     };
 
-    fetch('https://hstu-online-services-server.onrender.com/examQuestions', {
+    fetch('http://localhost:5000/examQuestions', {
       method: 'post',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
       },
-      body: JSON.stringify(examQuestion)
+      body: JSON.stringify(examQuestion),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -229,9 +229,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
 
   useEffect(() => {
     if (toggleExamMode === 'old') {
-      fetch(
-        `https://hstu-online-services-server.onrender.com/teacherExamQuestions?teacherId=${teacherId}`
-      )
+      fetch(`http://localhost:5000/teacherExamQuestions?teacherId=${teacherId}`)
         .then((res) => res.json())
         .then((data) => {
           if (data) {

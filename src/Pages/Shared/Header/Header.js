@@ -1,5 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import CustomLink from './CustomLink';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ import auth from '../../../firebase.config';
 const Header = ({ role }) => {
   const [u] = useAuthState(auth);
   const user = '';
-  console.log(u);
+  // console.log(u);
   const NavItems = () => {
     return (
       <>
@@ -30,7 +30,7 @@ const Header = ({ role }) => {
         {role === 'admin' && (
           <>
             <li>
-              <CustomLink to='/pendingUsers'>Pending Users</CustomLink>
+              <CustomLink to='/addUser'>Add User</CustomLink>
             </li>
             <li>
               <CustomLink to='/updateResult'>Update Result</CustomLink>

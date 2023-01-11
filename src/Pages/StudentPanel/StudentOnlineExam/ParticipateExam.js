@@ -6,7 +6,7 @@ import LoadingSpinner from '../../Shared/Utilities/LoadingSpinner';
 
 const ParticipateExam = ({ preview = false, testQuestions }) => {
   const {
-    state: { selectedExam, studentId }
+    state: { selectedExam, studentId },
   } = useLocation();
   const [pageLoading, setPageLoading] = useState(false);
   const navigate = useNavigate();
@@ -15,16 +15,13 @@ const ParticipateExam = ({ preview = false, testQuestions }) => {
     e.preventDefault();
     setPageLoading(true);
     const answerToSubmit = { studentId, answersOfQuestions };
-    fetch(
-      `https://hstu-online-services-server.onrender.com/updateAnswer?questionId=${selectedExam._id}`,
-      {
-        method: 'put',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify(answerToSubmit)
-      }
-    )
+    fetch(`http://localhost:5000/updateAnswer?questionId=${selectedExam._id}`, {
+      method: 'put',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(answerToSubmit),
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -33,7 +30,7 @@ const ParticipateExam = ({ preview = false, testQuestions }) => {
           e.target.reset();
           setPageLoading(false);
           navigate('/onlineExam', {
-            replace: true
+            replace: true,
           });
         } else if (data.message) {
           toast.error('Answer already submitted');

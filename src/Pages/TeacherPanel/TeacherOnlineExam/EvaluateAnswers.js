@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 const EvaluateAnswers = () => {
   const {
-    state: { selectedExam }
+    state: { selectedExam },
   } = useLocation();
   const { _id, answers, questions, examMarks } = selectedExam || {};
   const [studentAnswers, setStudentAnswers] = useState({});
@@ -32,16 +32,13 @@ const EvaluateAnswers = () => {
       );
     } else {
       setPageLoading(true);
-      fetch(
-        `https://hstu-online-services-server.onrender.com/evaluateAnswers?questionId=${_id}`,
-        {
-          method: 'put',
-          headers: {
-            'content-type': 'application/json'
-          },
-          body: JSON.stringify({ studentId, givenMarks })
-        }
-      )
+      fetch(`http://localhost:5000/evaluateAnswers?questionId=${_id}`, {
+        method: 'put',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ studentId, givenMarks }),
+      })
         .then((res) => res.json())
         .then((data) => {
           if (data.acknowledged) {
@@ -155,8 +152,8 @@ const EvaluateAnswers = () => {
                                           ...totalMark,
                                           {
                                             questionId: question.questionId,
-                                            mark: e.target.value
-                                          }
+                                            mark: e.target.value,
+                                          },
                                         ]);
                                       }
                                     }}

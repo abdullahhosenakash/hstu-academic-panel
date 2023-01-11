@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import ManageStudents from './Pages/AdminPanel/ManageStudents/ManageStudents';
-import PendingUsers from './Pages/AdminPanel/PendingUsers/PendingUsers';
+import AddUser from './Pages/AdminPanel/AddUser/AddUser';
 import Home from './Pages/Home/Home';
 import ClassSchedule from './Pages/Shared/ClassSchedule/ClassSchedule';
 import Header from './Pages/Shared/Header/Header';
@@ -22,6 +22,7 @@ import SignUp from './Pages/Authentications/SignUp';
 
 function App() {
   const [role, setRole] = useRole();
+
   return (
     <div>
       <Header role={role} />
@@ -42,7 +43,7 @@ function App() {
         <Route path='/updateResult' element={<UpdateResult />} />
         <Route path='/notices' element={<Notices />} />
         <Route path='/profile' element={<Profile />} />
-        <Route path='/pendingUsers' element={<PendingUsers />} />
+        <Route path='/addUser' element={<AddUser />} />
         <Route path='/manageStudents' element={<ManageStudents />} />
         <Route path='/result' element={<Result />} />
         <Route path='/enrollment' element={<Enrollment />} />
@@ -52,6 +53,7 @@ function App() {
 
         <Route path='*' element={<NotFound />} />
       </Routes>
+      {/* <Footer /> */}
 
       <div className='flex lg:flex-row flex-col gap-5 justify-center pt-32'>
         <button
