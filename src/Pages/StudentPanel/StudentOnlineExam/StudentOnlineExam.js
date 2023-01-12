@@ -178,8 +178,6 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
             )}
           </tbody>
         </table>
-
-        {/* <CQ questions={questions} /> */}
       </div>
     </div>
   );

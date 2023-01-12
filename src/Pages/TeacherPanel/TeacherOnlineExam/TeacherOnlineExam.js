@@ -445,8 +445,8 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                               </label>
                               <input
                                 type='text'
-                                className='input input-primary w-[21rem] lg:w-60 text-base font-normal'
                                 name='examTitle'
+                                className='input input-primary w-[21rem] lg:w-60 text-base font-normal'
                                 placeholder='Enter exam title here'
                                 required
                               />
@@ -462,6 +462,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                                 placeholder='Enter exam marks here'
                                 min={5}
                                 required
+                                onWheel={(e) => e.target.blur()}
                               />
                             </div>
                           </div>
@@ -480,6 +481,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                                 required
                                 min={0}
                                 max={59}
+                                onWheel={(e) => e.target.blur()}
                               />
                             </div>
                             <div className=''>

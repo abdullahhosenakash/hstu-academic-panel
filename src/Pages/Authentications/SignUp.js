@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import auth from '../../firebase.config';
 import {
   useAuthState,
@@ -9,9 +9,9 @@ import {
 import LoadingSpinner from '../Shared/Utilities/LoadingSpinner';
 import { signOut } from 'firebase/auth';
 import googleLogo from '../../assets/google.png';
-import googleLogoBlackAndWhite from '../../assets/google-black.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [userMode, setUserMode] = useState('student');
@@ -26,6 +26,7 @@ const SignUp = () => {
   const [sendEmailVerification, , sending, verificationError] =
     useSendEmailVerification(auth);
   const [user] = useAuthState(auth);
+  const navigate = useNavigate();
 
   const userSignUp = (e, signUpMethod) => {
     e.preventDefault();
@@ -39,8 +40,23 @@ const SignUp = () => {
   };
 
   if (user) {
+    fetch(
+      `http://localhost:5000/updateUser?userId=${userId}&userMode=${userMode}`,
+      {
+        method: 'put',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ userEmail: user.email }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        navigate('/');
+      });
   }
-  console.log(user);
+  // console.log(userId);
 
   return (
     <div>
@@ -86,17 +102,18 @@ const SignUp = () => {
                 className='input input-primary'
                 required
                 onFocus={() => setErrorMessage('')}
-                onBlur={(e) => setUserId(e.target.value)}
                 onChange={(e) => {
-                  if (e.target.value.length === 8) {
+                  const givenUserId = e.target.value;
+                  if (givenUserId.length === 8) {
                     setFindingUser(true);
+
                     fetch('http://localhost:5000/findUser', {
                       method: 'post',
                       headers: {
                         'content-type': 'application/json',
                       },
                       body: JSON.stringify({
-                        userId: e.target.value,
+                        userId: givenUserId,
                         userMode,
                       }),
                     })
@@ -108,6 +125,7 @@ const SignUp = () => {
                         } else if (data.result === 0) {
                           setUserExists(false);
                           setErrorMessage('');
+                          setUserId(givenUserId);
                         } else {
                           setUserExists(true);
                           setErrorMessage('Wrong User ID');

@@ -78,11 +78,12 @@ const AddUser = () => {
                 <span className=''>Student ID</span>
               </label>
               <input
-                type='text'
+                type='number'
                 name='studentId'
                 placeholder='Enter Student ID'
                 className='input input-primary'
                 required
+                onWheel={(e) => e.target.blur()}
                 onFocus={() => setErrorMessage('')}
               />
             </div>
@@ -187,14 +188,15 @@ const AddUser = () => {
                 <span className=''>Session</span>
               </label>
               <input
-                type='text'
+                type='number'
                 name='session'
                 placeholder='Enter Session'
                 className='input input-primary'
                 required
+                onWheel={(e) => e.target.blur()}
               />
             </div>
-            {userId ? (
+            {userId.studentId ? (
               <p className='text-center'>
                 User ID is for {userId.studentId} is
                 <span className='text-primary ml-1 font-bold'>

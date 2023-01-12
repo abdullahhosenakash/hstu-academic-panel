@@ -139,6 +139,7 @@ const EvaluateAnswers = () => {
                                     className='input input-sm input-primary w-24'
                                     min={0}
                                     required
+                                    onWheel={(e) => e.target.blur()}
                                     onFocus={() => setErrorMessage('')}
                                     onBlur={(e) => {
                                       const availableMark = totalMark.find(
