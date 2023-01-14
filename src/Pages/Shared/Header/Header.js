@@ -19,7 +19,7 @@ const Header = ({ role }) => {
               <CustomLink to='/classSchedule'>Class Schedule</CustomLink>
             </li>
             <li>
-              <CustomLink to='/onlineExam'>Online Exam</CustomLink>
+              <CustomLink to='/teacherOnlineExam'>Online Exam</CustomLink>
             </li>
             <li>
               <CustomLink to='/updateResult'>Update Result</CustomLink>
@@ -46,7 +46,7 @@ const Header = ({ role }) => {
               <CustomLink to='/classSchedule'>Class Schedule</CustomLink>
             </li>
             <li>
-              <CustomLink to='/onlineExam'>Online Exam</CustomLink>
+              <CustomLink to='/studentOnlineExam'>Online Exam</CustomLink>
             </li>
             <li>
               <CustomLink to='/result'>Result</CustomLink>

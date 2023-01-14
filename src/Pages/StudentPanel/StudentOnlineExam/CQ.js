@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useCurrentTime from '../../../hooks/useCurrentTime';
-import TimeCountDown from '../Utilities/TimeCountDown';
+import TimeCountDown from '../../Shared/Utilities/TimeCountDown';
 
 const CQ = ({
   testQuestions = [],

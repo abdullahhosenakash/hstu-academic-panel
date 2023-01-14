@@ -10,15 +10,17 @@ import Profile from './Pages/Shared/Profile/Profile';
 import UpdateResult from './Pages/Shared/UpdateResult/UpdateResult';
 import Enrollment from './Pages/StudentPanel/Enrollment/Enrollment';
 import Result from './Pages/StudentPanel/Result/Result';
-import OnlineExam from './Pages/Shared/OnlineExam/OnlineExam';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useRole from './hooks/useRole';
-import ParticipateExam from './Pages/StudentPanel/StudentOnlineExam/ParticipateExam';
 import NotFound from './Pages/Shared/Errors/NotFound';
 import EvaluateAnswers from './Pages/TeacherPanel/TeacherOnlineExam/EvaluateAnswers';
 import Login from './Pages/Authentications/Login';
 import SignUp from './Pages/Authentications/SignUp';
+import TeacherOnlineExam from './Pages/TeacherPanel/TeacherOnlineExam/TeacherOnlineExam';
+import StudentOnlineExam from './Pages/StudentPanel/StudentOnlineExam/StudentOnlineExam';
+import ParticipateExam from './Pages/StudentPanel/StudentOnlineExam/ParticipateExam';
+import ExamResult from './Pages/StudentPanel/StudentOnlineExam/ExamResult';
 
 function App() {
   const [role, setRole] = useRole();
@@ -29,16 +31,18 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/home' element={<Home />} />
-        <Route path='/onlineExam' element={<OnlineExam />} />
-        <Route path='/onlineExam' element={<OnlineExam />} />
+        <Route path='/studentOnlineExam' element={<StudentOnlineExam />} />
         <Route
-          path='/onlineExam/participateExam'
+          path='/studentOnlineExam/participateExam'
           element={<ParticipateExam />}
         />
+        <Route path='/studentOnlineExam/examResult' element={<ExamResult />} />
+        <Route path='/teacherOnlineExam' element={<TeacherOnlineExam />} />
         <Route
-          path='/onlineExam/evaluateAnswers'
+          path='/teacherOnlineExam/evaluateAnswers'
           element={<EvaluateAnswers />}
         />
+
         <Route path='/classSchedule' element={<ClassSchedule />} />
         <Route path='/updateResult' element={<UpdateResult />} />
         <Route path='/notices' element={<Notices />} />

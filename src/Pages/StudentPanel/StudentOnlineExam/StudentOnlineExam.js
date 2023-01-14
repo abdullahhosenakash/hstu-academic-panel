@@ -4,12 +4,13 @@ import useCurrentTime from '../../../hooks/useCurrentTime';
 import LoadingSpinner from '../../Shared/Utilities/LoadingSpinner';
 import TimeCountDown from '../../Shared/Utilities/TimeCountDown';
 
-const StudentOnlineExam = ({ toggleExamMode }) => {
+const StudentOnlineExam = () => {
   const [questions, setQuestions] = useState([]);
   const [questionModified, setQuestionModified] = useState(false);
   const [currentTime] = useCurrentTime();
   const [pageLoading, setPageLoading] = useState(false);
   const navigate = useNavigate();
+  const [toggleExamMode, setToggleExamMode] = useState('old');
   const studentId = '1802126';
   const dept = 'ece';
   const level = '4';
@@ -43,9 +44,9 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
           {
             method: 'put',
             headers: {
-              'content-type': 'application/json',
+              'content-type': 'application/json'
             },
-            body: JSON.stringify(closedQuestion),
+            body: JSON.stringify(closedQuestion)
           }
         )
           .then((res) => res.json())
@@ -56,14 +57,18 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
 
   const participateExam = (_id) => {
     const selectedExam = questions.find((question) => question._id === _id);
-    navigate(`/onlineExam/participateExam`, {
+    navigate(`/studentOnlineExam/participateExam`, {
       replace: true,
-      state: { selectedExam, studentId },
+      state: { selectedExam, studentId }
     });
   };
 
-  const viewResult = () => {
-    console.log('hh');
+  const viewResult = (questionId) => {
+    console.log(questionId);
+    navigate('/studentOnlineExam/examResult', {
+      replace: true,
+      state: questionId
+    });
   };
 
   if (pageLoading) {
@@ -72,6 +77,25 @@ const StudentOnlineExam = ({ toggleExamMode }) => {
 
   return (
     <div className='pt-2'>
+      <div className='flex  gap-3 justify-center'>
+        <button
+          className={`btn btn-sm rounded-full btn-primary w-42 lg:uppercase normal-case  ${
+            toggleExamMode === 'old' && 'btn-disabled'
+          }`}
+          onClick={() => setToggleExamMode('old')}
+        >
+          View Existing Exams
+        </button>
+        <button
+          className={`btn btn-sm rounded-full btn-primary w-42 lg:uppercase normal-case ${
+            toggleExamMode === 'new' && 'btn-disabled'
+          }`}
+          onClick={() => setToggleExamMode('new')}
+        >
+          Participate New Exam
+        </button>
+      </div>
+
       <div className='overflow-x-auto'>
         <table
           className='table table-zebra lg:w-1/2 mx-auto rounded-full mt-2'

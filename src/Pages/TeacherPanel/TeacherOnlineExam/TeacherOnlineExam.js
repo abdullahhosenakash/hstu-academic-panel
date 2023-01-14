@@ -3,11 +3,14 @@ import { toast } from 'react-toastify';
 import useDegree from '../../../hooks/useDegree';
 import useDepartment from '../../../hooks/useDepartment';
 import useMaxDate from '../../../hooks/useMaxDate';
-import CQ from '../../Shared/OnlineExam/CQ';
+import useRole from '../../../hooks/useRole';
+import CQ from '../../StudentPanel/StudentOnlineExam/CQ';
 import AvailableQuestions from './AvailableQuestions';
 import OldExams from './OldExams';
 
-const TeacherOnlineExam = ({ toggleExamMode }) => {
+const TeacherOnlineExam = () => {
+  const [role] = useRole();
+  const [toggleExamMode, setToggleExamMode] = useState('old');
   const [examType, setExamType] = useState('cq');
   const [questions, setQuestions] = useState([]);
   const [faculty, setFaculty] = useState('');
@@ -42,7 +45,10 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
     return [newDate, newMonth];
   };
 
-  const year = new Date().getFullYear();
+  const date = new Date();
+  const year = date.getFullYear();
+  const currentTime = `${date.getHours()}:${date.getMinutes()}`;
+
   const [currentDate, currentMonth] = dateMonthModifier(
     new Date().getDate(),
     new Date().getMonth() + 1
@@ -68,7 +74,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
     if (questionText) {
       const newQuestion = {
         questionId: questions.length + 1,
-        question: questionText,
+        question: questionText
       };
       setQuestions([...questions, newQuestion]);
       e.target.reset();
@@ -202,15 +208,15 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
       questions,
       answers: [],
       examCompleted: false,
-      resultStatus: 'not published',
+      resultStatus: 'not published'
     };
 
     fetch('http://localhost:5000/examQuestions', {
       method: 'post',
       headers: {
-        'content-type': 'application/json',
+        'content-type': 'application/json'
       },
-      body: JSON.stringify(examQuestion),
+      body: JSON.stringify(examQuestion)
     })
       .then((res) => res.json())
       .then((data) => {
@@ -242,10 +248,29 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
   }, [toggleExamMode, questionModified]);
 
   return (
-    <div>
+    <div className='mt-2'>
+      <div className='flex  gap-3 justify-center'>
+        <button
+          className={`btn btn-sm rounded-full btn-primary w-42 lg:uppercase normal-case  ${
+            toggleExamMode === 'old' && 'btn-disabled'
+          }`}
+          onClick={() => setToggleExamMode('old')}
+        >
+          View Existing Exams
+        </button>
+        <button
+          className={`btn btn-sm rounded-full btn-primary w-42 lg:uppercase normal-case ${
+            toggleExamMode === 'new' && 'btn-disabled'
+          }`}
+          onClick={() => setToggleExamMode('new')}
+        >
+          {role === 'student' ? 'Participate' : 'Launch'} New Exam
+        </button>
+      </div>
+
       {toggleExamMode === 'new' ? (
         <>
-          <div className='fpy-2'>
+          <div className=''>
             <div className='flex flex-col items-center justify-center gap-2'>
               <div className=''>
                 <label className='label'>
@@ -495,7 +520,7 @@ const TeacherOnlineExam = ({ toggleExamMode }) => {
                                 name='examDateTime'
                                 min={`${year}-${currentMonth}-${currentDate}T08:00`}
                                 max={modifiedMaxDate}
-                                defaultValue={`${year}-${currentMonth}-${currentDate}T08:00`}
+                                defaultValue={`${year}-${currentMonth}-${currentDate}T${currentTime}`}
                                 className='input input-primary w-[21rem] lg:w-60'
                                 required
                               />

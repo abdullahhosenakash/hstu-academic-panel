@@ -3,15 +3,14 @@ import { useNavigate } from 'react-router-dom';
 
 const OldExams = ({ oldQuestions }) => {
   const navigate = useNavigate();
-  console.log(oldQuestions);
+  // console.log(oldQuestions);
 
-  const evaluateAnswers = (questionId) => {
-    const selectedExam = oldQuestions.find((q) => q._id === questionId);
-    navigate(`evaluateAnswers`, {
-      replace: true,
-      state: { selectedExam }
-    });
-  };
+  // const evaluateAnswers = (questionId) => {
+  //   navigate(`evaluateAnswers`, {
+  //     replace: true,
+  //     state: { questionId }
+  //   });
+  // };
 
   return (
     <div className='pt-2'>
@@ -28,11 +27,11 @@ const OldExams = ({ oldQuestions }) => {
               <th>Dept</th>
               <td>Course Code</td>
               <td>Course Title</td>
-              <th className=''>Exam Title</th>
-              <th className=''>Date</th>
-              <th className=''>Time</th>
-              <th className=''>Duration</th>
-              <th className=''>Result Status</th>
+              <th>Exam Title</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Duration</th>
+              <th>Result Status</th>
               <th className='w-8'>Action</th>
             </tr>
           </thead>
@@ -54,11 +53,20 @@ const OldExams = ({ oldQuestions }) => {
                     <td>{q.resultStatus}</td>
                     <td>
                       <button
-                        className='btn btn-sm rounded-full btn-primary'
-                        onClick={() => evaluateAnswers(q._id)}
-                        disabled={!q.examCompleted}
+                        className='btn btn-sm rounded-full btn-primary w-[10.5rem]'
+                        onClick={() => {
+                          navigate(`evaluateAnswers`, {
+                            replace: true,
+                            state: { questionId: q._id }
+                          });
+                        }}
+                        disabled={
+                          !q.examCompleted || q.resultStatus === 'published'
+                        }
                       >
-                        Evaluate Answers
+                        {q.resultStatus === 'published'
+                          ? 'Evaluated'
+                          : 'Evaluate Answers'}
                       </button>
                       {!q.examCompleted ? (
                         <span className='block text-sm text-yellow-500'>

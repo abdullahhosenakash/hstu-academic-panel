@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import CQ from '../../Shared/OnlineExam/CQ';
+import CQ from './CQ';
 import LoadingSpinner from '../../Shared/Utilities/LoadingSpinner';
 
 const ParticipateExam = ({ preview = false, testQuestions }) => {
   const {
-    state: { selectedExam, studentId },
+    state: { selectedExam, studentId }
   } = useLocation();
   const [pageLoading, setPageLoading] = useState(false);
   const navigate = useNavigate();
@@ -18,9 +18,9 @@ const ParticipateExam = ({ preview = false, testQuestions }) => {
     fetch(`http://localhost:5000/updateAnswer?questionId=${selectedExam._id}`, {
       method: 'put',
       headers: {
-        'content-type': 'application/json',
+        'content-type': 'application/json'
       },
-      body: JSON.stringify(answerToSubmit),
+      body: JSON.stringify(answerToSubmit)
     })
       .then((res) => res.json())
       .then((data) => {
@@ -29,8 +29,8 @@ const ParticipateExam = ({ preview = false, testQuestions }) => {
           toast.success('Answers submitted');
           e.target.reset();
           setPageLoading(false);
-          navigate('/onlineExam', {
-            replace: true,
+          navigate('/studentOnlineExam', {
+            replace: true
           });
         } else if (data.message) {
           toast.error('Answer already submitted');

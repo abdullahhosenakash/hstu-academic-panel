@@ -1,26 +1,61 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const EvaluateAnswers = () => {
-  const {
-    state: { selectedExam },
-  } = useLocation();
-  const { _id, answers, questions, examMarks } = selectedExam || {};
-  const [studentAnswers, setStudentAnswers] = useState({});
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { questionId } = location.state;
+  const [selectedQuestion, setSelectedQuestion] = useState({});
+  const { _id, answers, questions, examMarks } = selectedQuestion;
+  const [studentAnswer, setStudentAnswer] = useState({});
   const [totalMark, setTotalMark] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [pageLoading, setPageLoading] = useState(false);
-  const { studentId, answersOfQuestions } = studentAnswers;
-  // console.log(examMarks);
+  const { studentId, answersOfQuestions } = studentAnswer;
+  const [updated, setUpdated] = useState(false);
+  // console.log(selectedQuestion);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/findQuestion?questionId=${questionId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const unEvaluatedAnswers = data?.answers?.find(
+          (answer) => !answer.obtainedMark
+        );
+        console.log(data);
+        if (unEvaluatedAnswers) {
+          setSelectedQuestion(data);
+        } else {
+          // setSelectedQuestion({});
+          fetch(
+            `http://localhost:5000/updateQuestion?questionId=${questionId}`,
+            {
+              method: 'put',
+              headers: {
+                'content-type': 'application/json'
+              },
+              body: JSON.stringify({ resultStatus: 'published' })
+            }
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.acknowledged) {
+                toast.success('Evaluation Completed!');
+                setSelectedQuestion({});
+                navigate('/teacherOnlineExam', { replace: true });
+              }
+            });
+        }
+      });
+  }, [questionId, updated, navigate]);
 
   const evaluateButton = (studentId) => {
     const selectedStudent = answers.find(
       (answer) => answer.studentId === studentId
     );
-    setStudentAnswers(selectedStudent);
+    setStudentAnswer(selectedStudent);
   };
-  // console.log(totalMark);
 
   const submitMarks = (e) => {
     e.preventDefault();
@@ -35,17 +70,16 @@ const EvaluateAnswers = () => {
       fetch(`http://localhost:5000/evaluateAnswers?questionId=${_id}`, {
         method: 'put',
         headers: {
-          'content-type': 'application/json',
+          'content-type': 'application/json'
         },
-        body: JSON.stringify({ studentId, givenMarks }),
+        body: JSON.stringify({ studentId, givenMarks })
       })
         .then((res) => res.json())
         .then((data) => {
           if (data.acknowledged) {
             toast.success('Mark updated');
-            e.target.reset();
-            // setStudentAnswers({});
-            // setQuestionModified(!questionModified);
+            setStudentAnswer({});
+            setUpdated(!updated);
           }
         });
     }
@@ -55,13 +89,10 @@ const EvaluateAnswers = () => {
     <div className='pt-2'>
       <h2 className='text-3xl text-center'>Evaluate Answers</h2>
       <div className=''>
-        <div className='flex flex-col lg:flex-row justify-around'>
-          <div className='p-1 border-2 border-primary rounded-lg'>
+        <div className='flex flex-col lg:flex-row justify-around '>
+          <div className='p-1 border-2 border-primary rounded-lg mx-2 lg:mx-0'>
             <div className='h-[32rem] overflow-y-scroll'>
-              <table
-                className='table table-zebra rounded-full mx-auto'
-                data-theme='dar'
-              >
+              <table className='table table-zebra rounded-full mx-auto'>
                 {/* Table Head */}
                 <thead className='text-center'>
                   <tr>
@@ -73,13 +104,13 @@ const EvaluateAnswers = () => {
                 </thead>
                 {/* Table Body */}
                 <tbody className='text-center'>
-                  {answers.length ? (
+                  {answers?.length ? (
                     <>
                       {answers.map((q, index) => (
                         <tr key={index} className=''>
                           <td>{index + 1}</td>
                           <td>{q.studentId}</td>
-                          <td>
+                          <td className='text-sm'>
                             {q.obtainedMark
                               ? q.obtainedMark
                               : 'Not evaluated yet'}
@@ -87,7 +118,7 @@ const EvaluateAnswers = () => {
                           <td>
                             <button
                               className='btn btn-sm rounded-full btn-primary'
-                              disabled={q.evaluated}
+                              disabled={q.obtainedMark}
                               onClick={() => evaluateButton(q.studentId)}
                             >
                               Evaluate
@@ -104,7 +135,7 @@ const EvaluateAnswers = () => {
             </div>
           </div>
 
-          <div className='w-1/2 border-2 border-primary rounded-lg'>
+          <div className='lg:w-1/2 border-2 border-primary rounded-lg m-2 lg:m-0'>
             <h4 className='text-xl text-center rounded-t-md py-2 bg-[#f2f2f2]'>
               Student ID: {studentId}
             </h4>
@@ -116,7 +147,6 @@ const EvaluateAnswers = () => {
                       <div className='m-1' key={index}>
                         {questions?.map((question, index) => {
                           if (question.questionId === answer.questionId) {
-                            // console.log(question.question);
                             return (
                               <div
                                 key={index}
@@ -153,8 +183,8 @@ const EvaluateAnswers = () => {
                                           ...totalMark,
                                           {
                                             questionId: question.questionId,
-                                            mark: e.target.value,
-                                          },
+                                            mark: e.target.value
+                                          }
                                         ]);
                                       }
                                     }}
@@ -163,11 +193,12 @@ const EvaluateAnswers = () => {
                               </div>
                             );
                           }
+                          return '';
                         })}
                       </div>
                     ))}
                   </div>
-                  {studentAnswers.studentId ? (
+                  {studentAnswer.studentId ? (
                     <div className='flex flex-col items-center '>
                       {errorMessage ? (
                         <p className='text-red-600 text-sm'>{errorMessage}</p>
