@@ -20,7 +20,6 @@ import SignUp from './Pages/Authentications/SignUp';
 import TeacherOnlineExam from './Pages/TeacherPanel/TeacherOnlineExam/TeacherOnlineExam';
 import StudentOnlineExam from './Pages/StudentPanel/StudentOnlineExam/StudentOnlineExam';
 import ParticipateExam from './Pages/StudentPanel/StudentOnlineExam/ParticipateExam';
-import ExamResult from './Pages/StudentPanel/StudentOnlineExam/ExamResult';
 
 function App() {
   const [role, setRole] = useRole();
@@ -36,7 +35,6 @@ function App() {
           path='/studentOnlineExam/participateExam'
           element={<ParticipateExam />}
         />
-        <Route path='/studentOnlineExam/examResult' element={<ExamResult />} />
         <Route path='/teacherOnlineExam' element={<TeacherOnlineExam />} />
         <Route
           path='/teacherOnlineExam/evaluateAnswers'

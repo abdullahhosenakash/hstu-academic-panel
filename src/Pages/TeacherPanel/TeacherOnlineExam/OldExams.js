@@ -69,7 +69,7 @@ const OldExams = ({ oldQuestions }) => {
                           : 'Evaluate Answers'}
                       </button>
                       {!q.examCompleted ? (
-                        <span className='block text-sm text-yellow-500'>
+                        <span className='block text-sm text-warning'>
                           Exam not completed yet
                         </span>
                       ) : (

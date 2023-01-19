@@ -11,7 +11,7 @@ const StudentOnlineExam = () => {
   const [pageLoading, setPageLoading] = useState(false);
   const navigate = useNavigate();
   const [toggleExamMode, setToggleExamMode] = useState('old');
-  const studentId = '1802126';
+  const studentId = '1802121';
   const dept = 'ece';
   const level = '4';
   const semester = 'I';
@@ -63,14 +63,6 @@ const StudentOnlineExam = () => {
     });
   };
 
-  const viewResult = (questionId) => {
-    console.log(questionId);
-    navigate('/studentOnlineExam/examResult', {
-      replace: true,
-      state: questionId
-    });
-  };
-
   if (pageLoading) {
     return <LoadingSpinner />;
   }
@@ -96,76 +88,102 @@ const StudentOnlineExam = () => {
         </button>
       </div>
 
-      <div className='overflow-x-auto'>
-        <table
-          className='table table-zebra lg:w-1/2 mx-auto rounded-full mt-2'
-          data-theme='dark'
-        >
-          {/* Table Head */}
-          <thead className='text-center'>
-            <tr>
-              <th className='w-8'>SL</th>
-              <td>Course Code</td>
-              <th>Course Teacher</th>
-              <th className=''>Exam Title</th>
-              <th className=''>Date</th>
-              <th className=''>Time</th>
-              <th className=''>Duration</th>
-              {toggleExamMode === 'new' ? (
-                <th className=''>Time Remaining</th>
-              ) : (
-                <th className=''>Result Status</th>
-              )}
-              <th className='w-8'>Action</th>
-            </tr>
-          </thead>
-          {/* Table Body */}
-          <tbody className='text-center'>
-            {questions.length ? (
-              <>
-                {questions.map((q, index) => (
-                  <tr key={index} className='h-24'>
-                    <td>{index + 1}</td>
-                    <td>{q.courseCode}</td>
-                    <td>{q.courseTeacher}</td>
-                    <td>{q.examTitle}</td>
-                    <td>{q.examDate}</td>
-                    <td>{q.examTime}</td>
-                    <td>{q.duration}</td>
-                    {toggleExamMode === 'new' ? (
-                      <td>
-                        {q.examTimeInMilliseconds - currentTime > 0 ? (
-                          <span
-                            className={
-                              q.examTimeInMilliseconds - currentTime < 3600000
-                                ? 'text-yellow-400'
-                                : ''
-                            }
-                          >
-                            <span className='block text-sm'>
-                              Exam will be started in
-                            </span>
-                            <TimeCountDown
-                              deadline={q.examTimeInMilliseconds}
-                            />
-                          </span>
-                        ) : (
-                          <span className='text-red-500'>
-                            <span className='block text-sm'>
-                              Exam has started and <br /> will be closed in
-                            </span>
-                            <TimeCountDown
-                              deadline={q.examTimeWithDurationInMilliseconds}
-                            />
-                          </span>
-                        )}
-                      </td>
-                    ) : (
-                      <td>{q.resultStatus}</td>
-                    )}
-                    <td>
+      {questions.length ? (
+        <div className='overflow-x-auto'>
+          <table
+            className='table table-zebra lg:w-1/2 mx-auto rounded-full mt-2'
+            data-theme='dark'
+          >
+            {/* Table Head */}
+            <thead className='text-center'>
+              <tr>
+                <th className='w-8'>SL</th>
+                <td>Course Code</td>
+                <th>Course Teacher</th>
+                <th className=''>Exam Title</th>
+                <th className=''>Date</th>
+                {toggleExamMode === 'new' ? (
+                  <>
+                    <th className=''>Time</th>
+                    <th className=''>Duration</th>
+                    <th className=''>Time Remaining</th>
+                    <th className='w-8'>Action</th>
+                  </>
+                ) : (
+                  <th className=''>Obtained Mark</th>
+                )}
+              </tr>
+            </thead>
+            {/* Table Body */}
+            <tbody className='text-center'>
+              {questions.length ? (
+                <>
+                  {questions.map((q, index) => (
+                    <tr key={index} className='h-24'>
+                      <td>{index + 1}</td>
+                      <td>{q.courseCode}</td>
+                      <td>{q.courseTeacher}</td>
+                      <td>{q.examTitle}</td>
+                      <td>{q.examDate}</td>
                       {toggleExamMode === 'new' ? (
                         <>
+                          <td>{q.examTime}</td>
+                          <td>{q.duration}</td>
+                          <td>
+                            {q.examTimeInMilliseconds - currentTime > 0 ? (
+                              <span
+                                className={
+                                  q.examTimeInMilliseconds - currentTime <
+                                  3600000
+                                    ? 'text-warning'
+                                    : ''
+                                }
+                              >
+                                <span className='block text-sm'>
+                                  Exam will be started in
+                                </span>
+                                <TimeCountDown
+                                  deadline={q.examTimeInMilliseconds}
+                                />
+                              </span>
+                            ) : (
+                              <span className='text-red-500'>
+                                <span className='block text-sm'>
+                                  Exam has started and <br /> will be closed in
+                                </span>
+                                <TimeCountDown
+                                  deadline={
+                                    q.examTimeWithDurationInMilliseconds
+                                  }
+                                />
+                              </span>
+                            )}
+                          </td>
+                        </>
+                      ) : (
+                        <td>
+                          {q.obtainedMark ? (
+                            <span className='text-sm text-success'>
+                              {q.obtainedMark} out of {q.examMarks}
+                            </span>
+                          ) : (
+                            <>
+                              {q.resultStatus !== 'published' ? (
+                                <span className='text-sm text-warning block'>
+                                  Result not published yet
+                                </span>
+                              ) : (
+                                ''
+                              )}
+                              <span className='text-sm text-red-500'>
+                                You didn't participate
+                              </span>
+                            </>
+                          )}
+                        </td>
+                      )}
+                      {toggleExamMode === 'new' ? (
+                        <td>
                           <button
                             className='btn btn-sm rounded-full btn-primary'
                             disabled={
@@ -177,32 +195,28 @@ const StudentOnlineExam = () => {
                             Participate
                           </button>
                           {q.participated ? (
-                            <span className='block text-yellow-400'>
+                            <span className='block text-warning'>
                               You already participated
                             </span>
                           ) : (
                             ''
                           )}
-                        </>
+                        </td>
                       ) : (
-                        <button
-                          className='btn btn-sm rounded-full btn-primary'
-                          disabled={q.resultStatus === 'not published'}
-                          onClick={() => viewResult(q._id)}
-                        >
-                          View Result
-                        </button>
+                        ''
                       )}
-                    </td>
-                  </tr>
-                ))}
-              </>
-            ) : (
-              <tr></tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                    </tr>
+                  ))}
+                </>
+              ) : (
+                <tr></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <h4 className='text-2xl text-center pt-3'>No Exam Available</h4>
+      )}
     </div>
   );
 };

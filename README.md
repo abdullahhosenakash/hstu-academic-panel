@@ -1,7 +1,8 @@
 # HSTU Online Services Client
 
-This is a project of HSTU Online Services as a thesis of ECE 402 Course. <br/>
-[Backend Repository](https://github.com/abdullahhosenakash/hstu-online-services-server) | [Live Project](https://hstu-online.web.app) | [Live Server](http://localhost:5000)
+This is a project of HSTU Online Services as a thesis of ECE 402 Course. <br/><br/>
+Live link of the project is [here](https://hstu-online.web.app) <br/>
+[Backend Repository](https://github.com/abdullahhosenakash/hstu-online-services-server) | [Live Server](https://hstu-online-services-server.onrender.com)
 
 ## Group Members
 

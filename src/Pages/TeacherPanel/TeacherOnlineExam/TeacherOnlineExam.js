@@ -47,7 +47,13 @@ const TeacherOnlineExam = () => {
 
   const date = new Date();
   const year = date.getFullYear();
-  const currentTime = `${date.getHours()}:${date.getMinutes()}`;
+  const hours = `${date.getHours()}`;
+  const minutes = `${date.getMinutes()}`;
+
+  const currentTime = `${hours.length === 2 ? hours : '0' + hours}:${
+    minutes.length === 2 ? minutes : 0 + minutes
+  }`;
+  console.log(currentTime);
 
   const [currentDate, currentMonth] = dateMonthModifier(
     new Date().getDate(),
