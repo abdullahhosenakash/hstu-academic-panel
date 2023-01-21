@@ -3,14 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 const OldExams = ({ oldQuestions }) => {
   const navigate = useNavigate();
-  // console.log(oldQuestions);
-
-  // const evaluateAnswers = (questionId) => {
-  //   navigate(`evaluateAnswers`, {
-  //     replace: true,
-  //     state: { questionId }
-  //   });
-  // };
 
   return (
     <div className='pt-2'>

@@ -27,7 +27,6 @@ const EvaluateAnswers = () => {
         if (unEvaluatedAnswers) {
           setSelectedQuestion(data);
         } else {
-          // setSelectedQuestion({});
           fetch(
             `http://localhost:5000/updateQuestion?questionId=${questionId}`,
             {
@@ -41,8 +40,8 @@ const EvaluateAnswers = () => {
             .then((res) => res.json())
             .then((data) => {
               if (data.acknowledged) {
-                toast.success('Evaluation Completed!');
                 setSelectedQuestion({});
+                toast.success('Evaluation Completed!');
                 navigate('/teacherOnlineExam', { replace: true });
               }
             });
@@ -50,7 +49,8 @@ const EvaluateAnswers = () => {
       });
   }, [questionId, updated, navigate]);
 
-  const evaluateButton = (studentId) => {
+  const evaluateButton = (e, studentId) => {
+    e.preventDefault();
     const selectedStudent = answers.find(
       (answer) => answer.studentId === studentId
     );
@@ -119,7 +119,7 @@ const EvaluateAnswers = () => {
                             <button
                               className='btn btn-sm rounded-full btn-primary'
                               disabled={q.obtainedMark}
-                              onClick={() => evaluateButton(q.studentId)}
+                              onClick={(e) => evaluateButton(e, q.studentId)}
                             >
                               Evaluate
                             </button>

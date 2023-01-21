@@ -90,7 +90,7 @@ const ManageStudents = () => {
                   onChange={(e) => setFaculty(e.target.value)}
                   required
                 >
-                  <option value='' selected={!faculty}>
+                  <option value='' defaultValue={!faculty}>
                     - - Select Faculty - -
                   </option>
                   <option value='agriculture'>Agriculture</option>
@@ -113,7 +113,7 @@ const ManageStudents = () => {
                   onChange={(e) => setDepartment(e.target.value)}
                   required
                 >
-                  <option value='' selected={!faculty}>
+                  <option value='' defaultValue={!faculty}>
                     - - Select Department - -{' '}
                   </option>
                   {dept?.map((d, index) => (

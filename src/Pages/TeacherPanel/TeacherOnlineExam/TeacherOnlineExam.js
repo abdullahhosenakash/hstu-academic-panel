@@ -4,6 +4,7 @@ import useDegree from '../../../hooks/useDegree';
 import useDepartment from '../../../hooks/useDepartment';
 import useMaxDate from '../../../hooks/useMaxDate';
 import useRole from '../../../hooks/useRole';
+import CheckVerification from '../../Authentications/CheckVerification';
 import CQ from '../../StudentPanel/StudentOnlineExam/CQ';
 import AvailableQuestions from './AvailableQuestions';
 import OldExams from './OldExams';
@@ -53,7 +54,6 @@ const TeacherOnlineExam = () => {
   const currentTime = `${hours.length === 2 ? hours : '0' + hours}:${
     minutes.length === 2 ? minutes : 0 + minutes
   }`;
-  console.log(currentTime);
 
   const [currentDate, currentMonth] = dateMonthModifier(
     new Date().getDate(),
@@ -255,6 +255,7 @@ const TeacherOnlineExam = () => {
 
   return (
     <div className='mt-2'>
+      <CheckVerification />
       <div className='flex  gap-3 justify-center'>
         <button
           className={`btn btn-sm rounded-full btn-primary w-42 lg:uppercase normal-case  ${
@@ -286,7 +287,7 @@ const TeacherOnlineExam = () => {
                   className='select select-primary w-80 lg:w-96 text-base font-normal'
                   onChange={(e) => setFaculty(e.target.value)}
                 >
-                  <option value='' selected={!faculty}>
+                  <option value='' defaultValue={!faculty}>
                     - - Select Faculty - -
                   </option>
                   <option value='agriculture'>Agriculture</option>
@@ -308,7 +309,7 @@ const TeacherOnlineExam = () => {
                   disabled={!faculty}
                   onChange={(e) => setDepartment(e.target.value)}
                 >
-                  <option value='' selected={!faculty}>
+                  <option value='' defaultValue={!faculty}>
                     - - Select Department - -{' '}
                   </option>
                   {dept?.map((d, index) => (
@@ -329,7 +330,7 @@ const TeacherOnlineExam = () => {
                   disabled={!department}
                   onChange={(e) => setLevel(e.target.value)}
                 >
-                  <option value='' selected={!faculty}>
+                  <option value='' defaultValue={!faculty}>
                     - - Level - -
                   </option>
                   <option value='1'>1</option>
@@ -347,7 +348,7 @@ const TeacherOnlineExam = () => {
                   disabled={!level}
                   onChange={(e) => setSemester(e.target.value)}
                 >
-                  <option value='' selected={!faculty}>
+                  <option value='' defaultValue={!faculty}>
                     - - Semester - -
                   </option>
                   <option value='I'>I</option>
@@ -377,172 +378,178 @@ const TeacherOnlineExam = () => {
                 </button>
               </div>
               {/* Questions */}
-              <div className='overflow-x-auto w-full'>
-                {previewQuestion ? (
-                  <CQ testQuestions={questions} preview={true} />
-                ) : (
-                  <form onSubmit={(e) => questionSubmit(e)}>
-                    <table
-                      className='table table-zebra lg:w-1/2 mx-auto rounded-full'
-                      data-theme='dark'
-                    >
-                      {/* Table Head */}
-                      <thead className='text-center'>
-                        <tr>
-                          <th className='w-8'>SL</th>
-                          <th className=''>Question</th>
-                          <th className='w-8'>Action</th>
-                        </tr>
-                      </thead>
-                      {/* Table Body */}
-                      <tbody className='text-center'>
-                        {questions.length ? (
-                          <>
-                            {questions.map((q, index) => (
-                              <AvailableQuestions
-                                q={q}
-                                index={index}
-                                key={index}
-                                editQuestion={editQuestion}
-                                editQuestionButton={editQuestionButton}
-                                questionToEdit={questionToEdit}
-                                errorMessage={errorMessage}
-                                setErrorMessage={setErrorMessage}
-                                updateQuestionButton={updateQuestionButton}
-                                deleteQuestion={deleteQuestion}
-                              />
-                            ))}
-                          </>
-                        ) : (
-                          <tr></tr>
-                        )}
-                        {/* add new question */}
-                        {!editQuestion ? (
+              {examType === 'cq' ? (
+                <div className='overflow-x-auto w-full'>
+                  {previewQuestion ? (
+                    <CQ testQuestions={questions} preview={true} />
+                  ) : (
+                    <form onSubmit={(e) => questionSubmit(e)}>
+                      <table
+                        className='table table-zebra lg:w-1/2 mx-auto rounded-full'
+                        data-theme='dark'
+                      >
+                        {/* Table Head */}
+                        <thead className='text-center'>
                           <tr>
-                            <td>{questions.length + 1}</td>
-                            <td className='relative'>
-                              <textarea
-                                name='questionField'
-                                className='textarea bg-white text-lg text-black w-full'
-                                placeholder='Question'
-                                onFocus={() => setErrorMessage('')}
-                              />
-                              <p className='text-sm p-0 bottom-px text-center text-red-400 absolute inset-x-1/4'>
-                                {errorMessage}
-                              </p>
-                            </td>
-
-                            <td>
-                              <button
-                                type='submit'
-                                className='btn btn-sm lg:btn-md rounded-full btn-primary w-20'
-                              >
-                                Add
-                              </button>
-                            </td>
+                            <th className='w-8'>SL</th>
+                            <th className=''>Question</th>
+                            <th className='w-8'>Action</th>
                           </tr>
-                        ) : (
-                          <tr></tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </form>
-                )}
-                {questions.length ? (
-                  <p className='text-xl text-center py-2'>
-                    {previewQuestion
-                      ? 'Edit Questions?'
-                      : 'Done making questions?'}
-                    <span
-                      className='text-primary pl-2 cursor-pointer'
-                      onClick={() => setPreviewQuestion(!previewQuestion)}
-                    >
-                      {previewQuestion ? 'click here' : 'see preview'}
-                    </span>
-                  </p>
-                ) : (
-                  ''
-                )}
+                        </thead>
+                        {/* Table Body */}
+                        <tbody className='text-center'>
+                          {questions.length ? (
+                            <>
+                              {questions.map((q, index) => (
+                                <AvailableQuestions
+                                  q={q}
+                                  index={index}
+                                  key={index}
+                                  editQuestion={editQuestion}
+                                  editQuestionButton={editQuestionButton}
+                                  questionToEdit={questionToEdit}
+                                  errorMessage={errorMessage}
+                                  setErrorMessage={setErrorMessage}
+                                  updateQuestionButton={updateQuestionButton}
+                                  deleteQuestion={deleteQuestion}
+                                />
+                              ))}
+                            </>
+                          ) : (
+                            <tr></tr>
+                          )}
+                          {/* add new question */}
+                          {!editQuestion ? (
+                            <tr>
+                              <td>{questions.length + 1}</td>
+                              <td className='relative'>
+                                <textarea
+                                  name='questionField'
+                                  className='textarea bg-white text-lg text-black w-full'
+                                  placeholder='Question'
+                                  onFocus={() => setErrorMessage('')}
+                                />
+                                <p className='text-sm p-0 bottom-px text-center text-red-400 absolute inset-x-1/4'>
+                                  {errorMessage}
+                                </p>
+                              </td>
 
-                {previewQuestion ? (
-                  <>
-                    <form onSubmit={(e) => launchQuestions(e)}>
-                      <div className='flex flex-col justify-center items-center gap-2 py-2'>
-                        <div className='flex-col lg:flex-row'>
-                          <div className='flex flex-col lg:flex-row gap-3'>
-                            <div className=''>
-                              <label className='label'>
-                                <span className='font-bold'>Exam Title</span>
-                              </label>
-                              <input
-                                type='text'
-                                name='examTitle'
-                                className='input input-primary w-[21rem] lg:w-60 text-base font-normal'
-                                placeholder='Enter exam title here'
-                                required
-                              />
+                              <td>
+                                <button
+                                  type='submit'
+                                  className='btn btn-sm lg:btn-md rounded-full btn-primary w-20'
+                                >
+                                  Add
+                                </button>
+                              </td>
+                            </tr>
+                          ) : (
+                            <tr></tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </form>
+                  )}
+                  {questions.length ? (
+                    <p className='text-xl text-center py-2'>
+                      {previewQuestion
+                        ? 'Edit Questions?'
+                        : 'Done making questions?'}
+                      <span
+                        className='text-primary pl-2 cursor-pointer'
+                        onClick={() => setPreviewQuestion(!previewQuestion)}
+                      >
+                        {previewQuestion ? 'click here' : 'see preview'}
+                      </span>
+                    </p>
+                  ) : (
+                    ''
+                  )}
+
+                  {previewQuestion ? (
+                    <>
+                      <form onSubmit={(e) => launchQuestions(e)}>
+                        <div className='flex flex-col justify-center items-center gap-2 py-2'>
+                          <div className='flex-col lg:flex-row'>
+                            <div className='flex flex-col lg:flex-row gap-3'>
+                              <div className=''>
+                                <label className='label'>
+                                  <span className='font-bold'>Exam Title</span>
+                                </label>
+                                <input
+                                  type='text'
+                                  name='examTitle'
+                                  className='input input-primary w-[21rem] lg:w-60 text-base font-normal'
+                                  placeholder='Enter exam title here'
+                                  required
+                                />
+                              </div>
+                              <div className=''>
+                                <label className='label'>
+                                  <span className='font-bold'>Exam Marks</span>
+                                </label>
+                                <input
+                                  type='number'
+                                  className='input input-primary w-[21rem] lg:w-60'
+                                  name='examMarks'
+                                  placeholder='Enter exam marks here'
+                                  min={5}
+                                  required
+                                  onWheel={(e) => e.target.blur()}
+                                />
+                              </div>
                             </div>
-                            <div className=''>
-                              <label className='label'>
-                                <span className='font-bold'>Exam Marks</span>
-                              </label>
-                              <input
-                                type='number'
-                                className='input input-primary w-[21rem] lg:w-60'
-                                name='examMarks'
-                                placeholder='Enter exam marks here'
-                                min={5}
-                                required
-                                onWheel={(e) => e.target.blur()}
-                              />
-                            </div>
-                          </div>
-                          <div className='flex flex-col lg:flex-row gap-3'>
-                            <div>
-                              <label className='label'>
-                                <span className='font-bold'>
-                                  Time Duration (in minutes)
-                                </span>
-                              </label>
-                              <input
-                                type='number'
-                                name='duration'
-                                placeholder='Enter duration'
-                                className='input input-primary w-[21rem] lg:w-60'
-                                required
-                                min={0}
-                                max={59}
-                                onWheel={(e) => e.target.blur()}
-                              />
-                            </div>
-                            <div className=''>
-                              <label className='label'>
-                                <span className='font-bold'>
-                                  Exam Date-Time
-                                </span>
-                              </label>
-                              <input
-                                type='datetime-local'
-                                name='examDateTime'
-                                min={`${year}-${currentMonth}-${currentDate}T08:00`}
-                                max={modifiedMaxDate}
-                                defaultValue={`${year}-${currentMonth}-${currentDate}T${currentTime}`}
-                                className='input input-primary w-[21rem] lg:w-60'
-                                required
-                              />
+                            <div className='flex flex-col lg:flex-row gap-3'>
+                              <div>
+                                <label className='label'>
+                                  <span className='font-bold'>
+                                    Time Duration (in minutes)
+                                  </span>
+                                </label>
+                                <input
+                                  type='number'
+                                  name='duration'
+                                  placeholder='Enter duration'
+                                  className='input input-primary w-[21rem] lg:w-60'
+                                  required
+                                  min={0}
+                                  max={59}
+                                  onWheel={(e) => e.target.blur()}
+                                />
+                              </div>
+                              <div className=''>
+                                <label className='label'>
+                                  <span className='font-bold'>
+                                    Exam Date-Time
+                                  </span>
+                                </label>
+                                <input
+                                  type='datetime-local'
+                                  name='examDateTime'
+                                  // min={`${year}-${currentMonth}-${currentDate}T08:00`}
+                                  max={modifiedMaxDate}
+                                  defaultValue={`${year}-${currentMonth}-${currentDate}T${currentTime}`}
+                                  className='input input-primary w-[21rem] lg:w-60'
+                                  required
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <button className='btn btn-primary rounded-full flex mx-auto lg:w-1/5'>
-                        Launch Questions
-                      </button>
-                    </form>
-                  </>
-                ) : (
-                  ''
-                )}
-              </div>
+                        <button className='btn btn-primary rounded-full flex mx-auto lg:w-1/5'>
+                          Launch Questions
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              ) : (
+                <div className='overflow-x-auto w-full text-center text-3xl'>
+                  This page is under development
+                </div>
+              )}
             </div>
           ) : (
             ''

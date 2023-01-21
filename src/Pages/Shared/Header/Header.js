@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import CustomLink from './CustomLink';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../../firebase.config';
+import { signOut } from 'firebase/auth';
 
 const Header = ({ role }) => {
-  const [u] = useAuthState(auth);
-  const user = '';
-  // console.log(u);
+  const [user] = useAuthState(auth);
+  const [userInfo, setUserInfo] = useState({});
+  console.log(user.emailVerified);
+
+  useEffect(() => {
+    if (user) {
+      fetch(`http://localhost:5000/studentInfo?userEmail=${user.email}`)
+        .then((res) => res.json())
+        .then((data) => setUserInfo(data));
+    }
+  }, [user]);
+
   const NavItems = () => {
     return (
       <>
@@ -125,9 +135,16 @@ const Header = ({ role }) => {
               to='/profile'
               className='font-semibold uppercase text-sm'
             >
-              User<sup>{role}</sup>
+              {userInfo.userMode === 'student'
+                ? userInfo.studentName
+                : userInfo.userMode === 'teacher'
+                ? userInfo.teacherName
+                : userInfo.adminName}
+              <sup>{role}</sup>
             </CustomLink>
-            <button className='btn btn-ghost'>Log Out</button>
+            <button className='btn btn-ghost' onClick={() => signOut(auth)}>
+              Log Out
+            </button>
             <button className='btn btn-ghost'>
               <FontAwesomeIcon icon={faCircleHalfStroke} />
             </button>

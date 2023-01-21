@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import auth from '../../firebase.config';
 import {
   useAuthState,
   useCreateUserWithEmailAndPassword,
   useSendEmailVerification,
-  useSignInWithGoogle,
+  useSendPasswordResetEmail,
+  useSignInWithGoogle
 } from 'react-firebase-hooks/auth';
 import LoadingSpinner from '../Shared/Utilities/LoadingSpinner';
-import { signOut } from 'firebase/auth';
 import googleLogo from '../../assets/google.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
@@ -19,6 +19,8 @@ const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [findingUser, setFindingUser] = useState(false);
   const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordMatched, setPasswordMatched] = useState(false);
   const [createUserWithEmailAndPassword, , loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const [signInWithGoogle, , googleLoading, googleError] =
@@ -27,35 +29,33 @@ const SignUp = () => {
     useSendEmailVerification(auth);
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
+  const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth);
 
-  const userSignUp = (e, signUpMethod) => {
+  const userSignUp = (e) => {
     e.preventDefault();
-    if (signUpMethod === 'google') {
-      signInWithGoogle();
-    } else {
-      const email = e.target.email.value;
-      const password = e.target.password.value;
-      createUserWithEmailAndPassword(email, password);
-    }
+    const email = e.target.email.value;
+    createUserWithEmailAndPassword(email, password);
   };
 
-  if (user) {
-    fetch(
-      `http://localhost:5000/updateUser?userId=${userId}&userMode=${userMode}`,
-      {
-        method: 'put',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ userEmail: user.email }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        navigate('/');
-      });
-  }
+  useEffect(() => {
+    if (user) {
+      fetch(
+        `http://localhost:5000/updateUser?userId=${userId}&userMode=${userMode}`,
+        {
+          method: 'put',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({ userEmail: user.email })
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          navigate('/', { replace: true });
+        });
+    }
+  }, [user, navigate, userId, userMode]);
   // console.log(userId);
 
   return (
@@ -63,9 +63,6 @@ const SignUp = () => {
       {(loading || googleLoading || sending || findingUser) && (
         <LoadingSpinner />
       )}
-      <button className='btn' onClick={() => signOut(auth)}>
-        sign out
-      </button>
       <h1 className='text-3xl font-bold text-center mt-3'>Sign Up now!</h1>
       <div className='flex gap-3 justify-center pt-2'>
         <button
@@ -85,7 +82,7 @@ const SignUp = () => {
           Teacher
         </button>
       </div>
-      <form onSubmit={(e) => userSignUp(e, 'emailPassword')}>
+      <form onSubmit={(e) => userSignUp(e)}>
         <div className='card w-96 mx-auto shadow-2xl bg-base-100'>
           <div className='card-body pt-1'>
             {/* User ID  */}
@@ -110,12 +107,12 @@ const SignUp = () => {
                     fetch('http://localhost:5000/findUser', {
                       method: 'post',
                       headers: {
-                        'content-type': 'application/json',
+                        'content-type': 'application/json'
                       },
                       body: JSON.stringify({
                         userId: givenUserId,
-                        userMode,
-                      }),
+                        userMode
+                      })
                     })
                       .then((res) => res.json())
                       .then((data) => {
@@ -147,28 +144,10 @@ const SignUp = () => {
             </div>
 
             <div className='flex flex-col w-full border-opacity-50 mt-2'>
-              <button
-                className='btn btn-primary'
-                disabled={userExists}
-                onClick={(e) => {
-                  e.preventDefault();
-                  userSignUp(e, 'google');
-                }}
-              >
-                {userExists ? (
-                  <span className='text-lg mr-2'>
-                    <FontAwesomeIcon icon={faGoogle} />
-                  </span>
-                ) : (
-                  <img src={googleLogo} alt='' className='w-8 mr-2' />
-                )}
-                Sign Up with Google
-              </button>
-              <div className='divider'>OR</div>
               {/* Email */}
               <div className='form-control'>
                 <label className='label'>
-                  <span className='label-text'>Email</span>
+                  <span className='label-text'>Student Email</span>
                 </label>
                 <input
                   type='email'
@@ -186,11 +165,34 @@ const SignUp = () => {
                 </label>
                 <input
                   type='password'
-                  name='password'
-                  placeholder='Enter your password'
+                  name='password1'
+                  placeholder='Enter password'
                   className='input input-primary'
                   required
                   disabled={userExists}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              {/* ReEnter Password */}
+              <div className='form-control'>
+                <label className='label'>
+                  <span className='label-text'>Re-Enter Password</span>
+                </label>
+                <input
+                  type='password'
+                  name='password2'
+                  placeholder='Re-Enter password'
+                  className='input input-primary'
+                  required
+                  disabled={userExists}
+                  onChange={(e) => {
+                    if (e.target.value !== password) {
+                      setErrorMessage('Password not matched');
+                    } else {
+                      setPasswordMatched(true);
+                      setErrorMessage('');
+                    }
+                  }}
                 />
               </div>
               {error ? (
@@ -200,11 +202,18 @@ const SignUp = () => {
               ) : (
                 ''
               )}
+              {errorMessage ? (
+                <span className='text-sm text-center text-red-500 pt-1'>
+                  {errorMessage}
+                </span>
+              ) : (
+                ''
+              )}
               <div className='form-control mt-6'>
                 <button
                   className='btn btn-primary'
                   type='submit'
-                  disabled={userExists}
+                  disabled={userExists || !passwordMatched}
                 >
                   Sign Up
                 </button>

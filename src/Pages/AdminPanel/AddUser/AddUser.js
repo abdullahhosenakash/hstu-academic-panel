@@ -25,13 +25,14 @@ const AddUser = () => {
       level,
       semester,
       session,
+      userEmail: ''
     };
     fetch(`http://localhost:5000/addUser?userMode=${userMode}`, {
       method: 'post',
       headers: {
-        'content-type': 'application/json',
+        'content-type': 'application/json'
       },
-      body: JSON.stringify(newStudent),
+      body: JSON.stringify(newStudent)
     })
       .then((res) => res.json())
       .then((data) => {
@@ -110,7 +111,7 @@ const AddUser = () => {
                 onChange={(e) => setFaculty(e.target.value)}
                 required
               >
-                <option value='' selected={!faculty}>
+                <option value='' defaultValue={!faculty}>
                   - - Select Faculty - -
                 </option>
                 <option value='agriculture'>Agriculture</option>
@@ -133,7 +134,7 @@ const AddUser = () => {
                 onChange={(e) => setDepartment(e.target.value)}
                 required
               >
-                <option value='' selected={!faculty}>
+                <option value='' defaultValue={!faculty}>
                   - - Select Department - -{' '}
                 </option>
                 {dept?.map((d, index) => (
@@ -155,7 +156,7 @@ const AddUser = () => {
                   name='level'
                   required
                 >
-                  <option value='' selected={!faculty}>
+                  <option value='' defaultValue={!faculty}>
                     - - Level - -
                   </option>
                   <option value='1'>1</option>
@@ -174,7 +175,7 @@ const AddUser = () => {
                   name='semester'
                   required
                 >
-                  <option value='' selected={!faculty}>
+                  <option value='' defaultValue={!faculty}>
                     - - Semester - -
                   </option>
                   <option value='I'>I</option>

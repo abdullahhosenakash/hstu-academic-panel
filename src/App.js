@@ -20,6 +20,8 @@ import SignUp from './Pages/Authentications/SignUp';
 import TeacherOnlineExam from './Pages/TeacherPanel/TeacherOnlineExam/TeacherOnlineExam';
 import StudentOnlineExam from './Pages/StudentPanel/StudentOnlineExam/StudentOnlineExam';
 import ParticipateExam from './Pages/StudentPanel/StudentOnlineExam/ParticipateExam';
+import RequireAuth from './Pages/Authentications/RequireAuth';
+import VerifyEmail from './Pages/Authentications/VerifyEmail';
 
 function App() {
   const [role, setRole] = useRole();
@@ -30,33 +32,118 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/home' element={<Home />} />
-        <Route path='/studentOnlineExam' element={<StudentOnlineExam />} />
+        <Route
+          path='/studentOnlineExam'
+          element={
+            <RequireAuth>
+              <StudentOnlineExam />
+            </RequireAuth>
+          }
+        />
         <Route
           path='/studentOnlineExam/participateExam'
-          element={<ParticipateExam />}
+          element={
+            <RequireAuth>
+              <ParticipateExam />
+            </RequireAuth>
+          }
         />
-        <Route path='/teacherOnlineExam' element={<TeacherOnlineExam />} />
+        <Route
+          path='/teacherOnlineExam'
+          element={
+            <RequireAuth>
+              <TeacherOnlineExam />
+            </RequireAuth>
+          }
+        />
         <Route
           path='/teacherOnlineExam/evaluateAnswers'
-          element={<EvaluateAnswers />}
+          element={
+            <RequireAuth>
+              <EvaluateAnswers />
+            </RequireAuth>
+          }
         />
 
-        <Route path='/classSchedule' element={<ClassSchedule />} />
-        <Route path='/updateResult' element={<UpdateResult />} />
-        <Route path='/notices' element={<Notices />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/addUser' element={<AddUser />} />
-        <Route path='/manageStudents' element={<ManageStudents />} />
-        <Route path='/result' element={<Result />} />
-        <Route path='/enrollment' element={<Enrollment />} />
+        <Route
+          path='/classSchedule'
+          element={
+            <RequireAuth>
+              <ClassSchedule />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/updateResult'
+          element={
+            <RequireAuth>
+              <UpdateResult />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/notices'
+          element={
+            <RequireAuth>
+              <Notices />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/profile'
+          element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/addUser'
+          element={
+            <RequireAuth>
+              <AddUser />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/manageStudents'
+          element={
+            <RequireAuth>
+              <ManageStudents />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/result'
+          element={
+            <RequireAuth>
+              <Result />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/enrollment'
+          element={
+            <RequireAuth>
+              <Enrollment />
+            </RequireAuth>
+          }
+        />
 
+        <Route
+          path='/verifyEmail'
+          element={
+            <RequireAuth>
+              <VerifyEmail />
+            </RequireAuth>
+          }
+        />
         <Route path='/login' element={<Login />} />
         <Route path='/signUp' element={<SignUp />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
       {/* <Footer /> */}
-
       <div className='flex lg:flex-row flex-col gap-5 justify-center pt-32'>
         <button
           className={`btn btn-sm rounded-full btn-primary  ${
