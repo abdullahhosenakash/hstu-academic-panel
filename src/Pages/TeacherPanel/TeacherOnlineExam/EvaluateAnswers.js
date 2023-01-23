@@ -17,7 +17,9 @@ const EvaluateAnswers = () => {
   // console.log(selectedQuestion);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/findQuestion?questionId=${questionId}`)
+    fetch(
+      `https://hstu-online-services-server.onrender.com/findQuestion?questionId=${questionId}`
+    )
       .then((res) => res.json())
       .then((data) => {
         const unEvaluatedAnswers = data?.answers?.find(
@@ -28,7 +30,7 @@ const EvaluateAnswers = () => {
           setSelectedQuestion(data);
         } else {
           fetch(
-            `http://localhost:5000/updateQuestion?questionId=${questionId}`,
+            `https://hstu-online-services-server.onrender.com/updateQuestion?questionId=${questionId}`,
             {
               method: 'put',
               headers: {
@@ -67,13 +69,16 @@ const EvaluateAnswers = () => {
       );
     } else {
       setPageLoading(true);
-      fetch(`http://localhost:5000/evaluateAnswers?questionId=${_id}`, {
-        method: 'put',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({ studentId, givenMarks })
-      })
+      fetch(
+        `https://hstu-online-services-server.onrender.com/evaluateAnswers?questionId=${_id}`,
+        {
+          method: 'put',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({ studentId, givenMarks })
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data.acknowledged) {

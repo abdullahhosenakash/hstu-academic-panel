@@ -19,7 +19,7 @@ const StudentOnlineExam = () => {
   useEffect(() => {
     setPageLoading(true);
     fetch(
-      `http://localhost:5000/examQuestions?department=${dept}&level=${level}&semester=${semester}&examMode=${toggleExamMode}&studentId=${studentId}`
+      `https://hstu-online-services-server.onrender.com/examQuestions?department=${dept}&level=${level}&semester=${semester}&examMode=${toggleExamMode}&studentId=${studentId}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -40,7 +40,7 @@ const StudentOnlineExam = () => {
       ) {
         const closedQuestion = { examCompleted: true };
         fetch(
-          `http://localhost:5000/updateQuestion?questionId=${question._id}`,
+          `https://hstu-online-services-server.onrender.com/updateQuestion?questionId=${question._id}`,
           {
             method: 'put',
             headers: {

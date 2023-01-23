@@ -40,7 +40,7 @@ const SignUp = () => {
   useEffect(() => {
     if (user) {
       fetch(
-        `http://localhost:5000/updateUser?userId=${userId}&userMode=${userMode}`,
+        `https://hstu-online-services-server.onrender.com/updateUser?userId=${userId}&userMode=${userMode}`,
         {
           method: 'put',
           headers: {
@@ -104,16 +104,19 @@ const SignUp = () => {
                   if (givenUserId.length === 8) {
                     setFindingUser(true);
 
-                    fetch('http://localhost:5000/findUser', {
-                      method: 'post',
-                      headers: {
-                        'content-type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        userId: givenUserId,
-                        userMode
-                      })
-                    })
+                    fetch(
+                      'https://hstu-online-services-server.onrender.com/findUser',
+                      {
+                        method: 'post',
+                        headers: {
+                          'content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          userId: givenUserId,
+                          userMode
+                        })
+                      }
+                    )
                       .then((res) => res.json())
                       .then((data) => {
                         if (data.result === 1) {

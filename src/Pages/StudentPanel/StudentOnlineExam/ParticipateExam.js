@@ -15,13 +15,16 @@ const ParticipateExam = ({ preview = false, testQuestions }) => {
     e.preventDefault();
     setPageLoading(true);
     const answerToSubmit = { studentId, answersOfQuestions };
-    fetch(`http://localhost:5000/updateAnswer?questionId=${selectedExam._id}`, {
-      method: 'put',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(answerToSubmit)
-    })
+    fetch(
+      `https://hstu-online-services-server.onrender.com/updateAnswer?questionId=${selectedExam._id}`,
+      {
+        method: 'put',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(answerToSubmit)
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

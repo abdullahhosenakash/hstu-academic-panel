@@ -27,13 +27,16 @@ const AddUser = () => {
       session,
       userEmail: ''
     };
-    fetch(`http://localhost:5000/addUser?userMode=${userMode}`, {
-      method: 'post',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(newStudent)
-    })
+    fetch(
+      `https://hstu-online-services-server.onrender.com/addUser?userMode=${userMode}`,
+      {
+        method: 'post',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(newStudent)
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.result?.acknowledged) {

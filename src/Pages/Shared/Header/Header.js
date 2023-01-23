@@ -10,11 +10,13 @@ import { signOut } from 'firebase/auth';
 const Header = ({ role }) => {
   const [user] = useAuthState(auth);
   const [userInfo, setUserInfo] = useState({});
-  console.log(user.emailVerified);
+  console.log(user?.emailVerified);
 
   useEffect(() => {
     if (user) {
-      fetch(`http://localhost:5000/studentInfo?userEmail=${user.email}`)
+      fetch(
+        `https://hstu-online-services-server.onrender.com/studentInfo?userEmail=${user.email}`
+      )
         .then((res) => res.json())
         .then((data) => setUserInfo(data));
     }
@@ -74,7 +76,7 @@ const Header = ({ role }) => {
   };
 
   return (
-    <div className='navbar dark:bg-[#4338ca] bg-[#cbd5e1] dark:text-white'>
+    <div className='navbar bg-[#4338ca] text-white'>
       <div className='navbar-start'>
         <div className='dropdown'>
           <label tabIndex={0} className='btn btn-ghost lg:hidden'>

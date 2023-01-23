@@ -117,16 +117,19 @@ const Login = () => {
                   if (givenUserId.length === 8) {
                     setFindingUser(true);
 
-                    fetch('http://localhost:5000/findUser', {
-                      method: 'post',
-                      headers: {
-                        'content-type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        userId: givenUserId,
-                        userMode
-                      })
-                    })
+                    fetch(
+                      'https://hstu-online-services-server.onrender.com/findUser',
+                      {
+                        method: 'post',
+                        headers: {
+                          'content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          userId: givenUserId,
+                          userMode
+                        })
+                      }
+                    )
                       .then((res) => res.json())
                       .then((data) => {
                         if (data.result === 1) {

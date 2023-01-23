@@ -20,7 +20,7 @@ const ManageStudents = () => {
     e.preventDefault();
     setSelectedBatch({ faculty, department, session });
     fetch(
-      `http://localhost:5000/findStudents?faculty=${faculty}&department=${department}&session=${session}`
+      `https://hstu-online-services-server.onrender.com/findStudents?faculty=${faculty}&department=${department}&session=${session}`
     )
       .then((res) => res.json())
       .then((data) => setStudents(data));

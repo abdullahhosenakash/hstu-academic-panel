@@ -217,7 +217,7 @@ const TeacherOnlineExam = () => {
       resultStatus: 'not published'
     };
 
-    fetch('http://localhost:5000/examQuestions', {
+    fetch('https://hstu-online-services-server.onrender.com/examQuestions', {
       method: 'post',
       headers: {
         'content-type': 'application/json'
@@ -241,7 +241,9 @@ const TeacherOnlineExam = () => {
 
   useEffect(() => {
     if (toggleExamMode === 'old') {
-      fetch(`http://localhost:5000/teacherExamQuestions?teacherId=${teacherId}`)
+      fetch(
+        `https://hstu-online-services-server.onrender.com/teacherExamQuestions?teacherId=${teacherId}`
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data) {
